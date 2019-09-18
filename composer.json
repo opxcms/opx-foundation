@@ -1,0 +1,45 @@
+{
+  "name": "opxcms/opx-foundation",
+  "description": "OpxCMS foundation.",
+  "type": "library",
+  "keywords": [
+    "opxcms",
+    "foundation"
+  ],
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/opxcms/opx-foundation/issues",
+    "source": "https://github.com/opxcms/opx-foundation"
+  },
+  "authors": [
+    {
+      "name": "Lozovoy Vyacheslav",
+      "email": "opxcms@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.1.3",
+    "ext-json": "*",
+    "fideloper/proxy": "^4.0",
+    "firebase/php-jwt": "~3.0|~4.0",
+    "laravel/framework": "5.7.*",
+    "laravel/tinker": "^1.0",
+    "mobiledetect/mobiledetectlib": "^2.8",
+    "opxcms/opx-image": "1.0.*",
+    "opxcms/opx-markup": "1.0.*"
+  },
+  "require-dev": {
+    "beyondcode/laravel-dump-server": "^1.0",
+    "filp/whoops": "^2.0",
+    "fzaninotto/faker": "^1.4",
+    "mockery/mockery": "^1.0",
+    "nunomaduro/collision": "^2.0",
+    "phpunit/phpunit": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Core\\": "src/"
+    }
+  },
+  "minimum-stability": "dev"
+}
