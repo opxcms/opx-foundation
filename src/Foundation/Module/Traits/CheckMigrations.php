@@ -13,12 +13,12 @@ trait CheckMigrations
      */
 	public function isMigrated()
 	{
-		if(empty($this->config['tables'])) {
+		if(empty($this->config('tables'))) {
 			return true;
 		}
 
 		return DataBaseCheck::isTablesMigrated(
-		    $this->config['tables'],
+		    $this->config('tables'),
             $this->app->make('db')->connection()->getSchemaBuilder()
         );
 	}
