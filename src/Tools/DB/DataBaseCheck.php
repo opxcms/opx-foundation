@@ -2,28 +2,30 @@
 
 namespace Core\Foundation\Tools\DB;
 
+use Exception;
+use Illuminate\Database\Schema\Builder;
 
 class DataBaseCheck
 {
     /**
      * Check for tables presence.
      *
-     * @param  null|string|array  $tables
-     * @param  \Illuminate\Database\Schema\Builder|null  $builder
+     * @param null|string|array $tables
+     * @param Builder|null $builder
      *
      * @return  boolean
      */
-    public static function isTablesMigrated($tables = null, $builder = null)
+    public static function isTablesMigrated($tables = null, $builder = null): bool
     {
-        if(empty($tables)) {
+        if (empty($tables)) {
             return true;
         }
 
-        if(is_string($tables)) {
+        if (is_string($tables)) {
             $tables = [$tables];
         }
 
-        if(! $builder) {
+        if (!$builder) {
             $builder = app()->make('db')->connection()->getSchemaBuilder();
         }
 
@@ -39,21 +41,25 @@ class DataBaseCheck
     /**
      * Check if table was migrated.
      *
-     * @param  string|null  $table
-     * @param  \Illuminate\Database\Schema\Builder|null  $builder
+     * @param string|null $table
+     * @param Builder|null $builder
      *
      * @return  boolean
      */
-    protected static function isTableMigrated($table, $builder = null)
+    protected static function isTableMigrated($table, $builder = null): bool
     {
-        if(! $table) {
+        if (!$table) {
             return true;
         }
 
-        if(! $builder) {
+        if (!$builder) {
             $builder = app()->make('db')->connection()->getSchemaBuilder();
         }
 
-        return $builder->hasTable($table);
+        try {
+            return $builder->hasTable($table);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
