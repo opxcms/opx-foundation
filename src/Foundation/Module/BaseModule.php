@@ -65,14 +65,7 @@ abstract class BaseModule extends ServiceProvider
 
         $class = static::class;
 
-        $this->path = $app['config']->get("modules.paths.{$class}");
-
-        $this->templatePath = str_replace($this->app->basePath('modules'), $this->app->basePath('templates'), $this->path);
-        if (!is_dir($this->templatePath)) {
-            $this->templatePath = null;
-        }
-
-        $this->name = Str::snake(str_replace([$this->app->getModulesPath(), DIRECTORY_SEPARATOR], '', $this->path));
+        $this->path = __DIR__;
 
         $this->namespace = substr($class, 0, -strlen(class_basename($class)) - 1);
     }
@@ -89,7 +82,7 @@ abstract class BaseModule extends ServiceProvider
         if ($this->app->inManageMode()) {
 
             // Define path to migrations
-            if ($this->templatePath && is_dir($this->templatePath('Migrations'))) {
+            if ($this->templatePath() && is_dir($this->templatePath('Migrations'))) {
                 $migrationPath = $this->templatePath('Migrations');
             } else {
                 $migrationPath = $this->path('Migrations');
@@ -122,13 +115,13 @@ abstract class BaseModule extends ServiceProvider
     public function boot(): void
     {
         // Add namespace for translator
-        if (!$this->templatePath || !is_dir($langPath = $this->templatePath('Lang'))) {
+        if (!$this->templatePath() || !is_dir($langPath = $this->templatePath('Lang'))) {
             $langPath = $this->path('Lang');
         }
         $this->app->make('translator')->addNamespace($this->name(), $langPath);
 
         // Add namespace for view
-        if (!$this->templatePath || !is_dir($viewPath = $this->templatePath('Views'))) {
+        if (!$this->templatePath() || !is_dir($viewPath = $this->templatePath('Views'))) {
             $viewPath = $this->path('Views');
         }
         $this->app->make('view')->addNamespace($this->name(), $viewPath);
@@ -163,11 +156,11 @@ abstract class BaseModule extends ServiceProvider
      *
      * @param null|string $path
      *
-     * @return  string
+     * @return  string|null
      */
-    public function templatePath($path = ''): string
+    public function templatePath($path = ''): ?string
     {
-        return $this->templatePath . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+        return isset($this->templatePath) ? $this->templatePath . ($path ? DIRECTORY_SEPARATOR . $path : $path) : null;
     }
 
     /**
