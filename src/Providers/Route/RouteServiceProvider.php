@@ -38,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapManageRoutes(): void
     {
         Route::namespace($this->namespace)
-            ->group(base_path('core/Routes/manage.php'));
+            ->group($this->app->path('Routes/manage.php'));
     }
 
     /**

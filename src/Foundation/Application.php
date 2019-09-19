@@ -31,6 +31,16 @@ class Application extends \Illuminate\Foundation\Application
     /** @var  boolean  Flag to disable some functions needed only when managing application. */
     protected $manageMode = false;
 
+    /** @var string  Real path of core. */
+    protected $corePath;
+
+    public function __construct($basePath = null)
+    {
+        parent::__construct($basePath);
+
+        $this->corePath = dirname(__DIR__);
+    }
+
     /**
      * Get the path to the application "core" directory.
      *
@@ -40,7 +50,7 @@ class Application extends \Illuminate\Foundation\Application
      */
     public function path($path = ''): string
     {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'core' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+        return $this->corePath . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
@@ -64,7 +74,7 @@ class Application extends \Illuminate\Foundation\Application
      */
     public function bootstrapPath($path = ''): string
     {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'core' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+        return $this->corePath . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
@@ -112,7 +122,7 @@ class Application extends \Illuminate\Foundation\Application
      */
     public function databasePath($path = ''): string
     {
-        return ($this->databasePath ?: $this->basePath . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'Database') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+        return ($this->databasePath ?: $this->corePath . DIRECTORY_SEPARATOR . 'Database') . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
@@ -122,7 +132,7 @@ class Application extends \Illuminate\Foundation\Application
      */
     public function langPath(): string
     {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'Lang';
+        return $this->corePath . DIRECTORY_SEPARATOR . 'Lang';
     }
 
     /**
@@ -133,18 +143,6 @@ class Application extends \Illuminate\Foundation\Application
     public function publicPath(): string
     {
         return $this->basePath . DIRECTORY_SEPARATOR . 'public_html';
-    }
-
-    /**
-     * Get the path to the resources directory.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    public function resourcePath($path = ''): string
-    {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'Resources' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
