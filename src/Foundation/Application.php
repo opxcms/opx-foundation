@@ -216,21 +216,13 @@ class Application extends \Illuminate\Foundation\Application
      */
     public function getNamespace(): string
     {
-        if ($this->namespace !== null) {
-            return $this->namespace;
+        if ($this->namespace === null) {
+            $class = static::class;
+            $this->namespace = substr($class, 0, -strlen(class_basename($class)) - 1);
+            $this->namespace = substr($this->namespace, 0, -strlen(class_basename($this->namespace)) - 1);
         }
 
-        $composer = json_decode(file_get_contents(base_path('composer.json')), true);
-
-        foreach ((array)data_get($composer, 'autoload.psr-4') as $namespace => $path) {
-            foreach ((array)$path as $pathChoice) {
-                if (realpath(app_path()) === realpath(base_path() . '/' . $pathChoice)) {
-                    return $this->namespace = $namespace;
-                }
-            }
-        }
-
-        throw new RuntimeException('Unable to detect application namespace.');
+        return $this->namespace;
     }
 
     /**
