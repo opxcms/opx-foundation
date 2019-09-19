@@ -2,6 +2,7 @@
 
 namespace Core\Console;
 
+use Core\Console\Commands\DiscoverModulesCommand;
 use Core\Foundation\Application;
 use Core\Jobs\CronLastRunTimestampJob;
 use Illuminate\Console\Application as Artisan;
@@ -36,16 +37,17 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        DiscoverModulesCommand::class,
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param \Illuminate\Console\Scheduling\Schedule $schedule
-     * @return void
+     * @param Schedule $schedule
+     *
+     * @return  void
      */
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
         // Make timestamp to monitor cron is working
         $schedule->job(new CronLastRunTimestampJob())->everyMinute();
@@ -90,7 +92,7 @@ class Kernel extends ConsoleKernel
 
             if (is_subclass_of($name, Command::class) &&
                 !(new ReflectionClass($name))->isAbstract()) {
-                Artisan::starting(function ($artisan) use ($name) {
+                Artisan::starting(static function ($artisan) use ($name) {
                     $artisan->resolve($name);
                 });
             }
