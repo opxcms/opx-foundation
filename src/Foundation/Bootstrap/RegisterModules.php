@@ -10,7 +10,7 @@ class RegisterModules
     /**
      * Bootstrap the given application.
      *
-     * @param  \Core\Foundation\Application|\Illuminate\Contracts\Foundation\Application $app
+     * @param \Core\Foundation\Application|\Illuminate\Contracts\Foundation\Application $app
      * @return void
      */
     public function bootstrap(Application $app)
@@ -23,36 +23,13 @@ class RegisterModules
         $config = $app->make("config");
 
         // Iterate all modules
-        foreach (ModulesLister::getRegistrarData($app) as $moduleRegistration) {
+        foreach (ModulesLister::getModules($app) as $module) {
 
-            $moduleClassName = $moduleRegistration['data']['provider'] ?? null;
-            $moduleFacade = $moduleRegistration['data']['facade'] ?? null;
-            $moduleFacadeAlias = $moduleRegistration['data']['facade_alias'] ?? null;
-            $modulePath = $moduleRegistration['path'] ?? null;
+            $moduleClassName = $module['module'] ?? null;
 
-            $modelsClasses = $moduleRegistration['data']['models'] ?? null;
-            if (null !== $modelsClasses) {
-                foreach ($modelsClasses as $modelsClass) {
-                    $config->push('modules.models', $modelsClass);
-                }
-            }
-
-            $pluginsClasses = $moduleRegistration['data']['extends_models'] ?? null;
-            if (null !== $pluginsClasses) {
-                foreach ($pluginsClasses as $pluginsClass => $extendsClasses) {
-                    foreach ($extendsClasses as $extendsClass => $priority) {
-                        $config->push("modules.plugins.{$extendsClass}.{$priority}", $pluginsClass);
-                    }
-                }
-            }
-
-            // Push module to providers list to register and add facade alias
+            // Push module to providers list to register
             if ($moduleClassName && class_exists($moduleClassName)) {
-                $config->set("modules.paths.{$moduleClassName}", $modulePath);
                 $config->push('app.providers', $moduleClassName);
-                if ($moduleFacadeAlias && $moduleFacade && class_exists($moduleFacade)) {
-                    $config->set('app.aliases.' . $moduleFacadeAlias, $moduleFacade);
-                }
             }
         }
     }
