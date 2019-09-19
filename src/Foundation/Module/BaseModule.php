@@ -69,7 +69,6 @@ abstract class BaseModule extends ServiceProvider
             throw new RuntimeException("Name and path must be set in [{$class}]");
         }
 
-
         $this->namespace = substr($class, 0, -strlen(class_basename($class)) - 1);
     }
 
