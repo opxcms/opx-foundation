@@ -356,7 +356,7 @@ abstract class BaseModule extends ServiceProvider
      */
     public function getTemplatesList(): array
     {
-        if (!$this->templatePath || !is_dir($path = $this->templatePath('Templates'))) {
+        if (!is_dir($path = $this->templatePath('Templates'))) {
             $path = $this->path('Templates');
         }
 
@@ -382,7 +382,7 @@ abstract class BaseModule extends ServiceProvider
      */
     public function getTemplateFileName(string $name): string
     {
-        if (!$this->templatePath || !is_dir($path = $this->templatePath('Templates'))) {
+        if (!is_dir($path = $this->templatePath('Templates'))) {
             $path = $this->path('Templates');
         }
 
@@ -398,7 +398,7 @@ abstract class BaseModule extends ServiceProvider
      */
     public function getViewsList(): array
     {
-        if (!$this->templatePath || !is_dir($path = $this->templatePath('Views'))) {
+        if (!is_dir($path = $this->templatePath('Views'))) {
             $path = $this->path('Views');
         }
         $files = File::files($path);
