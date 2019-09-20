@@ -36,9 +36,9 @@ class Application extends \Illuminate\Foundation\Application
 
     public function __construct($basePath = null)
     {
-        parent::__construct($basePath);
-
         $this->corePath = dirname(__DIR__);
+
+        parent::__construct($basePath);
     }
 
     /**
