@@ -2,7 +2,9 @@
 
 namespace Core\Providers;
 
+use Core\Listeners\RouteChangedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Core\Events\RouteChanged;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -12,8 +14,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Event' => [
-            'App\Listeners\EventListener',
+        RouteChanged::class => [
+            RouteChangedListener::class,
         ],
     ];
 
