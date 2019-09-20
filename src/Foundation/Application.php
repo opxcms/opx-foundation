@@ -74,7 +74,7 @@ class Application extends \Illuminate\Foundation\Application
      */
     public function bootstrapPath($path = ''): string
     {
-        return $this->corePath . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+        return $this->basePath($path);
     }
 
     /**
