@@ -84,9 +84,7 @@ abstract class BaseModule extends ServiceProvider
         if ($this->app->inManageMode()) {
 
             // Define path to migrations
-            if ($this->templatePath() && is_dir($this->templatePath('Migrations'))) {
-                $migrationPath = $this->templatePath('Migrations');
-            } else {
+            if (!is_dir($migrationPath = $this->templatePath('Migrations'))) {
                 $migrationPath = $this->path('Migrations');
             }
 
@@ -117,13 +115,13 @@ abstract class BaseModule extends ServiceProvider
     public function boot(): void
     {
         // Add namespace for translator
-        if (!$this->templatePath() || !is_dir($langPath = $this->templatePath('Lang'))) {
+        if (!is_dir($langPath = $this->templatePath('Lang'))) {
             $langPath = $this->path('Lang');
         }
         $this->app->make('translator')->addNamespace($this->name(), $langPath);
 
         // Add namespace for view
-        if (!$this->templatePath() || !is_dir($viewPath = $this->templatePath('Views'))) {
+        if (!is_dir($viewPath = $this->templatePath('Views'))) {
             $viewPath = $this->path('Views');
         }
         $this->app->make('view')->addNamespace($this->name(), $viewPath);
@@ -162,7 +160,9 @@ abstract class BaseModule extends ServiceProvider
      */
     public function templatePath($path = ''): ?string
     {
-        return isset($this->templatePath) ? $this->templatePath . ($path ? DIRECTORY_SEPARATOR . $path : $path) : null;
+        $dir = str_replace(['Modules', '\\'], [$this->app->basePath('templates'), '/'], $this->namespace);
+
+        return $dir . ($path ? DIRECTORY_SEPARATOR . $path : $path);
     }
 
     /**
