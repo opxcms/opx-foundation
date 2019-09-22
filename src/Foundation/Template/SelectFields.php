@@ -82,19 +82,26 @@ trait SelectFields
      * @param bool $withTrashed
      * @param string $captionField
      * @param string $idField
+     * @param string|null $orderBy
      *
      * @return  array
      */
-    public static function makeList(string $modelClass, bool $withTrashed = false, string $captionField = 'name', string $idField = 'id'): array
+    public static function makeList(string $modelClass, bool $withTrashed = false, string $captionField = 'name', string $idField = 'id', ?string $orderBy = null): array
     {
         /** @var Collection $models */
         if ($withTrashed === true) {
             $modelClass = call_user_func([$modelClass, 'withTrashed']);
+            if ($orderBy !== null) {
+                $modelClass = call_user_func([$modelClass, 'orderBy'], $orderBy);
+            }
+            $models = call_user_func([$modelClass, 'get'], ["{$idField} as id", "{$captionField} as caption"]);
+        } elseif ($orderBy !== null) {
+            $modelClass = call_user_func([$modelClass, 'query']);
+            $modelClass = call_user_func([$modelClass, 'orderBy'], $orderBy);
             $models = call_user_func([$modelClass, 'get'], ["{$idField} as id", "{$captionField} as caption"]);
         } else {
             $models = call_user_func([$modelClass, 'all'], ["{$idField} as id", "{$captionField} as caption"]);
         }
-
 
         return $models->toArray();
     }
