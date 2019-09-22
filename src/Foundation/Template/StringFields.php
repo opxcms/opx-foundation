@@ -138,4 +138,34 @@ trait StringFields
         );
     }
 
+    /**
+     * Make string input record.
+     *
+     * @param string $id
+     * @param string $placement
+     * @param array $options
+     * @param string $info
+     * @param string $permissions
+     *
+     * @return  array
+     */
+    public static function link(
+        string $id,
+        string $placement = '',
+        array $options = [],
+        string $info = '',
+        string $permissions = ''
+    ): array
+    {
+        return self::makeField(
+            $id,
+            $placement,
+            'link',
+            null,
+            $info,
+            $permissions,
+            $permissions,
+            ['options' => $options]
+        );
+    }
 }
