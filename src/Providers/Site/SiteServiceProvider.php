@@ -34,6 +34,9 @@ class SiteServiceProvider extends ServiceProvider
     /** @var string  Name of currently running server. */
     protected $serverName;
 
+    /** @var string  Address of currently running server. */
+    protected $serverAddress;
+
     /** @var  array  Asset array for scripts. */
     protected $scripts;
 
@@ -104,8 +107,9 @@ class SiteServiceProvider extends ServiceProvider
 //        $this->lang($this->app->getLocale());
 //        $this->fallbackLang($this->app->getL());
 //
-        // get server name
-        $this->serverName = preg_replace('/https*:\/\/(www\.)*/', '', request()->root());
+        // get server name and address
+        $this->serverAddress = request()->root();
+        $this->serverName = preg_replace('/https*:\/\/(www\.)*/', '', $this->serverAddress);
 
 //        config(['mail.from.address' => 'no-reply@' . $serverName]);
 //        config(['mail.from.name' => $this->title]);
@@ -149,5 +153,15 @@ class SiteServiceProvider extends ServiceProvider
     public function getServerName(): string
     {
         return $this->serverName;
+    }
+
+    /**
+     * Get address of server.
+     *
+     * @return  string
+     */
+    public function getServerAddress(): string
+    {
+        return $this->serverAddress;
     }
 }
