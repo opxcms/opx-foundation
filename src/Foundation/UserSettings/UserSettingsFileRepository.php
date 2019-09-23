@@ -6,7 +6,7 @@ use RuntimeException;
 use Illuminate\Support\Arr;
 
 class UserSettingsFileRepository extends UserSettingsRepository
-{
+    {
     /**
      * Get settings for given user and guard.
      * Accepts dot notation as key.
@@ -24,7 +24,11 @@ class UserSettingsFileRepository extends UserSettingsRepository
             return [];
         }
 
-        $repository = unserialize(file_get_contents($repositoryFileName), false);
+        $repository = unserialize(file_get_contents($repositoryFileName), ['allowed_classes' => false]);
+
+        if ($repository === false) {
+            return [];
+        }
 
         return $key === null
             ? $repository
@@ -47,8 +51,11 @@ class UserSettingsFileRepository extends UserSettingsRepository
         $repositoryExists = file_exists($repositoryFileName);
 
         $repository = $repositoryExists
-            ? unserialize(file_get_contents($repositoryFileName), false)
+            ? unserialize(file_get_contents($repositoryFileName), ['allowed_classes' => false])
             : [];
+        if ($repository === false) {
+            $repository = [];
+        }
 
         if ($key === null) {
             $repository = $settings;
