@@ -10,6 +10,7 @@ use Core\Http\Middleware\EncryptCookies;
 use Core\Http\Middleware\HTMLMinify;
 use Core\Http\Middleware\RedirectIfAuthenticated;
 use Core\Http\Middleware\RedirectIfManageAuthenticated;
+use Core\Http\Middleware\RedirectIndex;
 use Core\Http\Middleware\SwitchLocale;
 use Core\Http\Middleware\TrimStrings;
 use Core\Http\Middleware\TrustProxies;
@@ -60,6 +61,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        RedirectIndex::class,
         CheckForMaintenanceMode::class,
         ValidatePostSize::class,
         TrimStrings::class,
