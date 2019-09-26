@@ -1,19 +1,19 @@
 <?php
 
+use Core\Foundation\Database\OpxBlueprint;
+use Core\Foundation\Database\OpxMigration;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
-class CreateJobsTable extends Migration
+class CreateJobsTable extends OpxMigration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('jobs', function (Blueprint $table) {
+        $this->schema->create('jobs', static function (OpxBlueprint $table) {
             $table->bigIncrements('id');
             $table->string('queue')->index();
             $table->longText('payload');
@@ -29,7 +29,7 @@ class CreateJobsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('jobs');
     }
