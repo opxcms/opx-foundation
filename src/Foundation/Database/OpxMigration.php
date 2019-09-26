@@ -3,6 +3,8 @@
 namespace Core\Foundation\Database;
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Builder;
+use Illuminate\Support\Facades\Schema;
 
 abstract class OpxMigration extends Migration
 {
@@ -16,7 +18,7 @@ abstract class OpxMigration extends Migration
     /**
      * Schema builder.
      *
-     * @var  \Illuminate\Database\Schema\Builder
+     * @var  Builder
      */
     protected $schema;
 
@@ -27,6 +29,8 @@ abstract class OpxMigration extends Migration
      */
     public function __construct()
     {
+        Schema::defaultStringLength(191);
+
         $this->schema = app()->make('db')->connection()->getSchemaBuilder();
 
         if ($this->blueprint) {
