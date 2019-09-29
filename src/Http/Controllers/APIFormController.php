@@ -13,7 +13,11 @@ class APIFormController extends BaseController
 {
     use NotAuthorizedResponse;
 
+    /** @var string Component to load */
     public $component = 'opx-form';
+
+    /** @var null|string Url to controller */
+    public $base = null;
 
     /**
      * Returns list component with associated settings.
@@ -34,10 +38,11 @@ class APIFormController extends BaseController
         $response = [
             'component' => $this->component,
             'data' => [
+                'id' => $id,
                 'caption' => $caption,
+                'controller_base' => $this->base ?? null,
                 'save' => $save,
                 'form' => $data,
-                'id' => $id,
                 'hints' => $hints,
             ],
         ];
