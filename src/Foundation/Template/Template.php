@@ -14,7 +14,8 @@ class Template
         RelatedFields,
         SeoFields,
         TimestampsFields,
-        PublicationFields;
+        PublicationFields,
+        Comments;
 
     /**
      * Make section record.
