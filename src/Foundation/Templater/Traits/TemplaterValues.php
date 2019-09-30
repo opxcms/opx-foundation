@@ -10,17 +10,24 @@ trait TemplaterValues
      * Fill values from array.
      *
      * @param array $source
+     * @param string|array|null $except
      *
      * @return  $this
      */
-    public function fillValuesFromArray(array $source): self
+    public function fillValuesFromArray(array $source, $except = null): self
     {
         if (!isset($this->template['fields'])) {
             return $this;
         }
 
+        if (is_string($except)) {
+            $except = [$except];
+        }
+
         foreach ($this->template['fields'] as $key => $field) {
-            $this->setValue($key, $source[$field['name']] ?? null);
+            if ($except === null || !in_array($field['name'], $except, true)) {
+                $this->setValue($key, $source[$field['name']] ?? null);
+            }
         }
 
         return $this;
@@ -30,17 +37,24 @@ trait TemplaterValues
      * Fill values from object.
      *
      * @param mixed $source
+     * @param string|array|null $except
      *
      * @return  $this
      */
-    public function fillValuesFromObject($source): self
+    public function fillValuesFromObject($source, $except = null): self
     {
         if (empty($source) || !isset($this->template['fields'])) {
             return $this;
         }
 
+        if (is_string($except)) {
+            $except = [$except];
+        }
+
         foreach ($this->template['fields'] as $key => $field) {
-            $this->setValue($key, $source->{$field['name']} ?? null);
+            if ($except === null || !in_array($field['name'], $except, true)) {
+                $this->setValue($key, $source->{$field['name']} ?? null);
+            }
         }
 
         return $this;
@@ -50,19 +64,26 @@ trait TemplaterValues
      * Fill values from request.
      *
      * @param Request $request
+     * @param string|array|null $except
      *
      * @return  $this
      */
-    public function fillValuesFromRequest(Request $request): self
+    public function fillValuesFromRequest(Request $request, $except = null): self
     {
         if (!isset($this->template['fields'])) {
             return $this;
         }
 
+        if (is_string($except)) {
+            $except = [$except];
+        }
+
         $values = $request->all();
 
         foreach ($this->template['fields'] as $key => $field) {
-            $this->setValue($key, $values[$field['name']] ?? null);
+            if ($except === null || !in_array($field['name'], $except, true)) {
+                $this->setValue($key, $values[$field['name']] ?? null);
+            }
         }
 
         return $this;
@@ -153,7 +174,7 @@ trait TemplaterValues
             }
         }
 
-        if($key === null) {
+        if ($key === null) {
             return $values;
         }
 
