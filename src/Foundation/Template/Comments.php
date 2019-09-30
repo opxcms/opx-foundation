@@ -30,7 +30,7 @@ trait Comments
         return self::makeField(
             $id,
             $placement,
-            'text',
+            'comments',
             null,
             $info,
             '',
