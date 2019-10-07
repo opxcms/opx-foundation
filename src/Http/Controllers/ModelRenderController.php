@@ -34,6 +34,9 @@ class ModelRenderController extends BaseController
     /** @var array|null */
     protected $models;
 
+    /** @var string */
+    protected $layout;
+
     /**
      * RenderController constructor.
      *
@@ -185,7 +188,7 @@ class ModelRenderController extends BaseController
      */
     protected function renderLayout()
     {
-        $layoutFile = $this->model->getAttribute('layout');
+        $layoutFile = $this->layout ?? $this->model->getAttribute('layout');
 
         if ($layoutFile === null) {
             $class = get_class($this->model);
