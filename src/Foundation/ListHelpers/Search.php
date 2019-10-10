@@ -42,7 +42,7 @@ class Search
      */
     public static function applySearch(EloquentBuilder $query, $search, array $columnNames): EloquentBuilder
     {
-        if (empty($search['subject']) && empty($search['fields'])) {
+        if (empty($search['subject']) || empty($search['fields'])) {
             return $query;
         }
 
