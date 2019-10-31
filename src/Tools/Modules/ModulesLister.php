@@ -47,10 +47,12 @@ class ModulesLister
         // Get local modules from `modules` folder.
         foreach (self::getRegistrarFiles($app, $depth, $registerFileName) as $file) {
             $reg = require $file;
-            $data[$reg['name']] = [
-                'module' => $reg['module'],
-                'enabled' => $reg['enabled'],
-            ];
+            if (isset($reg['name'], $reg['module'])) {
+                $data[$reg['name']] = [
+                    'module' => $reg['module'],
+                    'enabled' => $reg['enabled'] ?? true,
+                ];
+            }
         }
 
         return $data;
