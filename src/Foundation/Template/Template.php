@@ -15,6 +15,7 @@ class Template
         SeoFields,
         TimestampsFields,
         PublicationFields,
+        KeyValueFields,
         Comments;
 
     /**
