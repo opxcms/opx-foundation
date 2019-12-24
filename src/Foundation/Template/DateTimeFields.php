@@ -40,6 +40,37 @@ trait DateTimeFields
     }
 
     /**
+     * Make date input record.
+     *
+     * @param string $id
+     * @param string $placement
+     * @param string|Carbon|null $default
+     * @param string $info
+     * @param string $validation
+     * @param string $permissions
+     *
+     * @return  array
+     */
+    public static function date(
+        string $id,
+        string $placement = '',
+        $default = null,
+        string $info = '',
+        string $validation = '',
+        string $permissions = ''
+    ): array
+    {
+        if ($default === null) {
+            $default = '';
+        } elseif
+        (is_string($default)) {
+            $default = Carbon::parse($default);
+        }
+
+        return self::makeField($id, $placement, 'date', $default, $info, $validation, $permissions);
+    }
+
+    /**
      * Make datetime input record.
      *
      * @param string $id
