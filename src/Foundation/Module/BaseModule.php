@@ -8,7 +8,6 @@ use Core\Foundation\Module\Traits\CheckMigrations;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use RuntimeException;
 
 /**
@@ -234,19 +233,6 @@ abstract class BaseModule extends ServiceProvider
     }
 
     /**
-     * Make included view.
-     *
-     * @param string $componentName
-     * @param array $attributes
-     *
-     * @return  mixed
-     */
-//	public function component($componentName, $attributes = [])
-//	{
-//	  return View::make($this->moduleNameSpace().'::components.'.$componentName)->with(array_merge($attributes, ['module' => $this]));
-//	}
-
-    /**
      * Returns manage navigation menu structure.
      * Items are stored in module's file 'Backend/backend.php'
      *
@@ -425,35 +411,4 @@ abstract class BaseModule extends ServiceProvider
             unset($this->routeRegistrar);
         }
     }
-//    /**
-//     * Make site map index record for module
-//     * In most cases you must override this function to have dynamic site map.
-//     *
-//     * @author lozovoyv@gmail.com
-//     * @version 1.0.1
-//     *
-//     * @param null
-//     * @return array|null
-//     */
-//	public function makeSiteMapIndex()
-//	{
-//		return [];
-//	}
-
-//    /**
-//     * Make site map array of module
-//     * In most cases you must override this function to have dynamic site map.
-//     *
-//     * @author lozovoyv@gmail.com
-//     * @version 1.0.1
-//     *
-//     * @param null
-//     * @return array|null
-//     */
-//	public function makeSiteMap()
-//	{
-//		return [];
-//	}
-
-
 }
