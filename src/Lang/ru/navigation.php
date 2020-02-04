@@ -10,7 +10,7 @@ return [
 
     'favorites' => 'Избранное',
     'site' => 'Сайт',
-    'notifications' => 'Сайт',
+    'notifications' => 'Уведомления',
     'settings' => 'Настройки',
 
     'settings_system' => 'Система',
