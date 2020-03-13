@@ -44,22 +44,24 @@ class ImageMutator implements MutatorInterface
         foreach ($value as $image) {
             $src = $image['src'] ?? '';
 
-            if (!empty($image['file'])) {
-                $src = $field['path'] . DIRECTORY_SEPARATOR . $src;
+            if (!empty($image['file']) || !empty($image['external'])) {
 
-                $diskPath = $storage->getDriver()->getAdapter()->getPathPrefix();
-                $localPath = pathinfo($src, PATHINFO_DIRNAME);
+                if (!empty($image['external'])) {
+                    $image_content = file_get_contents($src);
+                } else {
+                    $image_parts = explode(';base64,', $image['file']);
+                    $image_content = base64_decode($image_parts[1]);
+                }
+
                 $extension = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+                $localPath = $field['path'];
+                $diskPath = $storage->getDriver()->getAdapter()->getPathPrefix();
                 $prefix = $field['prefix'] ?? 'img_';
-
                 $filename = self::unique_filename($diskPath . DIRECTORY_SEPARATOR . $localPath, $prefix, $extension);
 
-                $localFilename = $localPath . DIRECTORY_SEPARATOR . $filename;
+                $localFilename = $field['path'] . DIRECTORY_SEPARATOR . $filename;
 
-                $image_parts = explode(';base64,', $image['file']);
-                $image_base64 = base64_decode($image_parts[1]);
-
-                $storage->put($localFilename, $image_base64);
+                $storage->put($localFilename, $image_content);
 
                 $src = $storage->url($localFilename);
             }
