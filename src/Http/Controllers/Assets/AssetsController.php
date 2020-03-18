@@ -4,6 +4,7 @@ namespace Core\Http\Controllers\Assets;
 
 use Core\Foundation\Module\BaseModule;
 use Core\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class AssetsController extends Controller
 {
@@ -29,7 +30,7 @@ class AssetsController extends Controller
 
     protected $noCacheExtensions = [
         'css',
-        'js'
+        'js',
     ];
 
     /** @var string Default MIME type */
@@ -41,11 +42,11 @@ class AssetsController extends Controller
     /**
      * Return requested asset file if user can get it.
      *
-     * @param  string  $asset
+     * @param string $asset
      *
      * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getSystemAsset($asset)
+    public function getSystemAsset(string $asset)
     {
         $path = app()->getAssetsPath('manage/assets/system');
 
@@ -55,11 +56,11 @@ class AssetsController extends Controller
     /**
      * Return requested asset file if user can get it.
      *
-     * @param  string  $asset
+     * @param string $asset
      *
      * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getPublicAsset($asset)
+    public function getPublicAsset(string $asset)
     {
         $path = app()->getAssetsPath('manage/assets/public');
 
@@ -69,21 +70,21 @@ class AssetsController extends Controller
     /**
      * Return requested asset file if user can get it.
      *
-     * @param  string  $module
-     * @param  string  $asset
+     * @param string $module
+     * @param string $asset
      *
      * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getModuleSystemAsset($module, $asset)
+    public function getModuleSystemAsset(string $module, string $asset)
     {
         /** @var BaseModule $moduleInstance */
         $moduleInstance = app()->getModule($module);
 
-        if(!$moduleInstance) {
+        if (!$moduleInstance) {
             return $this->sendAssetNotFoundResponse($asset);
         }
 
-        $path = $moduleInstance->path('assets'.DIRECTORY_SEPARATOR.'system');
+        $path = $moduleInstance->path('assets' . DIRECTORY_SEPARATOR . 'system');
 
         return $this->getAsset($path, $asset);
     }
@@ -91,92 +92,109 @@ class AssetsController extends Controller
     /**
      * Return requested asset file if user can get it.
      *
-     * @param  string  $module
-     * @param  string  $asset
+     * @param string $module
+     * @param string $asset
      *
      * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getModulePublicAsset($module, $asset)
+    public function getModulePublicAsset(string $module, string $asset)
     {
         /** @var BaseModule $moduleInstance */
         $moduleInstance = app()->getModule($module);
 
-        if(!$moduleInstance) {
+        if (!$moduleInstance) {
             return $this->sendAssetNotFoundResponse($asset);
         }
 
-        $path = $moduleInstance->path('assets'.DIRECTORY_SEPARATOR.'public');
+        $path = $moduleInstance->path('assets' . DIRECTORY_SEPARATOR . 'public');
 
         return $this->getAsset($path, $asset);
     }
 
-    public function getStorageAsset($asset) {
-        return $this->getAsset(storage_path('assets'), $asset);
+    /**
+     * Get asset from local storage.
+     *
+     * @param Request $request
+     * @param string $asset
+     *
+     * @return  \Illuminate\Contracts\Routing\ResponseFactory|mixed|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getStorageAsset(Request $request, string $asset)
+    {
+
+        $name = $request->input('name');
+
+        return $this->getAsset(storage_path('assets'), $asset, $name);
     }
 
     /**
      * Return asset by given full path if it exists.
      *
-     * @param  string  $path
-     * @param  string  $asset
+     * @param string $path
+     * @param string $asset
+     * @param string|null $name
      *
      * @return  \Illuminate\Contracts\Routing\ResponseFactory|mixed|\Symfony\Component\HttpFoundation\Response
      */
-    public function getAsset($path, $asset)
+    public function getAsset(string $path, string $asset, ?string $name = null)
     {
-        if(! $this->assetExists($path, $asset)) {
+        if (!$this->assetExists($path, $asset)) {
             return $this->sendAssetNotFoundResponse($asset);
         }
 
-        return $this->sendAsset($path, $asset);
+        return $this->sendAsset($path, $asset, $name);
     }
 
     /**
      * Check if asset exists and user can view it.
      *
-     * @param  string  $path
-     * @param  string  $asset
+     * @param string $path
+     * @param string $asset
      *
      * @return  bool
      */
-    public function assetExists($path, $asset)
+    public function assetExists(string $path, string $asset)
     {
-        return file_exists($path.DIRECTORY_SEPARATOR.$asset);
+        return file_exists($path . DIRECTORY_SEPARATOR . $asset);
     }
 
     /**
      * Return asset file with headers.
      *
-     * @param  string  $path
-     * @param  string  $asset
+     * @param string $path
+     * @param string $asset
      *
      * @return  mixed
      */
-    public function sendAsset($path, $asset)
+    public function sendAsset(string $path, string $asset, ?string $name = null)
     {
-        $fullAssetPath = $path.DIRECTORY_SEPARATOR.$asset;
+        $fullAssetPath = $path . DIRECTORY_SEPARATOR . $asset;
 
         $extension = strtolower(pathinfo($fullAssetPath, PATHINFO_EXTENSION));
 
         $type = $this->mimeTypes[$extension] ?? $this->defaultMimeType;
 
-        if(in_array($extension, $this->noCacheExtensions, true)) {
+        if (in_array($extension, $this->noCacheExtensions, true)) {
             $cache = 'max-age=0, must-revalidate';
         } else {
             $cache = "max-age={$this->cacheLifeTime}, public";
         }
 
-        return response()->file($fullAssetPath, ['Content-Type' => $type, 'Cache-Control' => $cache]);
+        return response()->file($fullAssetPath, [
+            'Content-Type' => $type,
+            'Cache-Control' => $cache,
+            'Content-Disposition' => 'attachment; filename="' . ($name ?? $asset) . '"',
+        ]);
     }
 
     /**
      * Return error response.
      *
-     * @param  string  $asset
+     * @param string $asset
      *
      * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function sendAssetNotFoundResponse($asset)
+    public function sendAssetNotFoundResponse(string $asset)
     {
         return response("File '$asset' not found.", 404);
     }
