@@ -2,7 +2,7 @@
 
 namespace Core\Foundation\Templater\Traits\Mutators;
 
-use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use Core\Foundation\Templater\Traits\Mutators\Helpers\StoreFile;
 
@@ -47,6 +47,7 @@ class AudioMutator implements MutatorInterface
 
         foreach ($value as $audio) {
             $src = $audio['src'] ?? '';
+            $size = $file['size'] ?? null;
 
             if (!empty($audio['file']) || !empty($audio['external'])) {
 
@@ -58,10 +59,15 @@ class AudioMutator implements MutatorInterface
                     $field['prefix'] ?? 'audio_',
                     isset($audio['external'])
                 );
+
+                $filename = $storage->getDriver()->getAdapter()->getPathPrefix() . $field['path'] . DIRECTORY_SEPARATOR . pathinfo($src, PATHINFO_BASENAME);
+                $size = filesize($filename);
             }
 
             $new[] = [
                 'src' => $src,
+                'name' => $audio['name'],
+                'size' => $size,
             ];
         }
 

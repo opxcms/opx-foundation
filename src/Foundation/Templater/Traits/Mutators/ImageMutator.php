@@ -2,7 +2,7 @@
 
 namespace Core\Foundation\Templater\Traits\Mutators;
 
-use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use Core\Foundation\Templater\Traits\Mutators\Helpers\StoreFile;
 
