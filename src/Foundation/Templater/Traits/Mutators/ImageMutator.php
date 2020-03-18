@@ -2,10 +2,14 @@
 
 namespace Core\Foundation\Templater\Traits\Mutators;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
+use Core\Foundation\Templater\Traits\Mutators\Helpers\StoreFile;
 
 class ImageMutator implements MutatorInterface
 {
+    use StoreFile;
+
     /**
      * Transform field on getting value from template.
      *
@@ -38,7 +42,7 @@ class ImageMutator implements MutatorInterface
 
         $new = [];
 
-        /** @var \Illuminate\Filesystem\Filesystem $storage */
+        /** @var Filesystem $storage */
         $storage = Storage::disk(empty($field['public']) ? 'secure' : 'public');
 
         foreach ($value as $image) {
@@ -46,24 +50,14 @@ class ImageMutator implements MutatorInterface
 
             if (!empty($image['file']) || !empty($image['external'])) {
 
-                if (!empty($image['external'])) {
-                    $image_content = file_get_contents($src);
-                } else {
-                    $image_parts = explode(';base64,', $image['file']);
-                    $image_content = base64_decode($image_parts[1]);
-                }
-
-                $extension = strtolower(pathinfo($src, PATHINFO_EXTENSION));
-                $localPath = $field['path'];
-                $diskPath = $storage->getDriver()->getAdapter()->getPathPrefix();
-                $prefix = $field['prefix'] ?? 'img_';
-                $filename = self::unique_filename($diskPath . DIRECTORY_SEPARATOR . $localPath, $prefix, $extension);
-
-                $localFilename = $field['path'] . DIRECTORY_SEPARATOR . $filename;
-
-                $storage->put($localFilename, $image_content);
-
-                $src = $storage->url($localFilename);
+                $src = self::writeFile(
+                    $src,
+                    $image['file'],
+                    $storage,
+                    $field['path'],
+                    $field['prefix'] ?? 'file_',
+                    isset($image['external'])
+                );
             }
 
             $new[] = [
@@ -74,26 +68,5 @@ class ImageMutator implements MutatorInterface
         }
 
         return json_encode($new);
-    }
-
-    /**
-     * Converts large hexidecimal numbers into decimal strings.
-     *
-     * @param string $dir
-     * @param string $prefix
-     * @param string $ext
-     *
-     * @return  string
-     */
-    private static function unique_filename(string $dir, string $prefix = '', string $ext = ''): string
-    {
-        do {
-            $filename = $prefix . strtolower(str_random());
-            if ($ext) {
-                $filename .= '.' . $ext;
-            }
-        } while (file_exists($dir . DIRECTORY_SEPARATOR . $filename));
-
-        return $filename;
     }
 }
