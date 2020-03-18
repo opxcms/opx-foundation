@@ -84,6 +84,30 @@ class OpxBlueprint extends Blueprint
     }
 
     /**
+     * Add image attributes to the table.
+     *
+     * @param string $column
+     *
+     * @return  void
+     */
+    public function audio($column = 'audio'): void
+    {
+        $this->text($column)->nullable();
+    }
+
+    /**
+     * Add image attributes to the table.
+     *
+     * @param string $column
+     *
+     * @return  void
+     */
+    public function file($column = 'file'): void
+    {
+        $this->text($column)->nullable();
+    }
+
+    /**
      * Add data field to the table.
      *
      * @return  void
