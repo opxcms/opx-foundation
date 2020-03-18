@@ -47,7 +47,7 @@ class AudioMutator implements MutatorInterface
 
         foreach ($value as $audio) {
             $src = $audio['src'] ?? '';
-            $size = $file['size'] ?? null;
+            $size = $audio['size'] ?? null;
 
             if (!empty($audio['file']) || !empty($audio['external'])) {
 
@@ -57,7 +57,7 @@ class AudioMutator implements MutatorInterface
                     $storage,
                     $field['path'],
                     $field['prefix'] ?? 'audio_',
-                    isset($audio['external'])
+                    !empty($audio['external'])
                 );
 
                 $filename = $storage->getDriver()->getAdapter()->getPathPrefix() . $field['path'] . DIRECTORY_SEPARATOR . pathinfo($src, PATHINFO_BASENAME);

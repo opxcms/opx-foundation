@@ -56,7 +56,7 @@ class ImageMutator implements MutatorInterface
                     $storage,
                     $field['path'],
                     $field['prefix'] ?? 'file_',
-                    isset($image['external'])
+                    !empty($image['external'])
                 );
             }
 
