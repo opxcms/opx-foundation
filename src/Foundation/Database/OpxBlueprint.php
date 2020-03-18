@@ -84,7 +84,7 @@ class OpxBlueprint extends Blueprint
     }
 
     /**
-     * Add image attributes to the table.
+     * Add audio attributes to the table.
      *
      * @param string $column
      *
@@ -96,7 +96,7 @@ class OpxBlueprint extends Blueprint
     }
 
     /**
-     * Add image attributes to the table.
+     * Add file attributes to the table.
      *
      * @param string $column
      *
