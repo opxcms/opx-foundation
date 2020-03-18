@@ -4,6 +4,7 @@ namespace Core\Http\Controllers\Assets;
 
 use Core\Foundation\Module\BaseModule;
 use Core\Http\Controllers\Controller;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 
 class AssetsController extends Controller
@@ -44,7 +45,7 @@ class AssetsController extends Controller
      *
      * @param string $asset
      *
-     * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return  ResponseFactory|mixed
      */
     public function getSystemAsset(string $asset)
     {
@@ -58,7 +59,7 @@ class AssetsController extends Controller
      *
      * @param string $asset
      *
-     * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return  ResponseFactory|mixed
      */
     public function getPublicAsset(string $asset)
     {
@@ -73,7 +74,7 @@ class AssetsController extends Controller
      * @param string $module
      * @param string $asset
      *
-     * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return  ResponseFactory|mixed
      */
     public function getModuleSystemAsset(string $module, string $asset)
     {
@@ -95,7 +96,7 @@ class AssetsController extends Controller
      * @param string $module
      * @param string $asset
      *
-     * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return  ResponseFactory|mixed
      */
     public function getModulePublicAsset(string $module, string $asset)
     {
@@ -117,7 +118,7 @@ class AssetsController extends Controller
      * @param Request $request
      * @param string $asset
      *
-     * @return  \Illuminate\Contracts\Routing\ResponseFactory|mixed|\Symfony\Component\HttpFoundation\Response
+     * @return  ResponseFactory|mixed
      */
     public function getStorageAsset(Request $request, string $asset)
     {
@@ -134,7 +135,7 @@ class AssetsController extends Controller
      * @param string $asset
      * @param string|null $name
      *
-     * @return  \Illuminate\Contracts\Routing\ResponseFactory|mixed|\Symfony\Component\HttpFoundation\Response
+     * @return  ResponseFactory|mixed
      */
     public function getAsset(string $path, string $asset, ?string $name = null)
     {
@@ -153,7 +154,7 @@ class AssetsController extends Controller
      *
      * @return  bool
      */
-    public function assetExists(string $path, string $asset)
+    public function assetExists(string $path, string $asset): bool
     {
         return file_exists($path . DIRECTORY_SEPARATOR . $asset);
     }
@@ -163,6 +164,7 @@ class AssetsController extends Controller
      *
      * @param string $path
      * @param string $asset
+     * @param string|null $name
      *
      * @return  mixed
      */
@@ -172,19 +174,16 @@ class AssetsController extends Controller
 
         $extension = strtolower(pathinfo($fullAssetPath, PATHINFO_EXTENSION));
 
-        $type = $this->mimeTypes[$extension] ?? $this->defaultMimeType;
+        $headers = [
+            'Content-Type' => $this->mimeTypes[$extension] ?? $this->defaultMimeType,
+            'Cache-Control' => in_array($extension, $this->noCacheExtensions, true) ? 'max-age=0, must-revalidate' : "max-age={$this->cacheLifeTime}, public",
+        ];
 
-        if (in_array($extension, $this->noCacheExtensions, true)) {
-            $cache = 'max-age=0, must-revalidate';
-        } else {
-            $cache = "max-age={$this->cacheLifeTime}, public";
+        if ($name !== null) {
+            $headers['Content-Disposition'] = 'attachment; filename="' . ($name ?? $asset) . '"';
         }
 
-        return response()->file($fullAssetPath, [
-            'Content-Type' => $type,
-            'Cache-Control' => $cache,
-            'Content-Disposition' => 'attachment; filename="' . ($name ?? $asset) . '"',
-        ]);
+        return response()->file($fullAssetPath, $headers);
     }
 
     /**
