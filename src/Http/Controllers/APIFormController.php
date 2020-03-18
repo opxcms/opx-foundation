@@ -133,8 +133,32 @@ class APIFormController extends BaseController
      * @param string $templatePath
      *
      * @return  JsonResponse
+     *
+     * @deprecated
      */
     protected function storeImageFromRequest(Request $request, string $templatePath): JsonResponse
+    {
+        $template = new Templater($templatePath);
+
+        $name = $request->input('name');
+        $data = $request->input('data');
+
+        // Just need to set field with image to template. Image will be stored automaticly according template settings.
+        $template->fillValuesFromArray([$name => [$data]]);
+        $res = json_decode($template->getEditableValues()[$name], true)[0];
+
+        return response()->json($res);
+    }
+
+    /**
+     * Store files from request.
+     *
+     * @param Request $request
+     * @param string $templatePath
+     *
+     * @return  JsonResponse
+     */
+    protected function storeFilesFromRequest(Request $request, string $templatePath): JsonResponse
     {
         $template = new Templater($templatePath);
 
