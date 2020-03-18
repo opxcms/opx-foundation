@@ -9,6 +9,8 @@ class Template
         DateTimeFields,
         CheckFields,
         ImageFields,
+        AudioFields,
+        FileFields,
         SelectFields,
         PropertiesFields,
         RelatedFields,
