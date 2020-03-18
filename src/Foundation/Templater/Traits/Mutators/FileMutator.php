@@ -47,6 +47,7 @@ class FileMutator implements MutatorInterface
 
         foreach ($value as $file) {
             $src = $file['src'] ?? '';
+            $size = $file['size'] ?? null;
 
             if (!empty($file['file']) || !empty($file['external'])) {
 
@@ -56,12 +57,17 @@ class FileMutator implements MutatorInterface
                     $storage,
                     $field['path'],
                     $field['prefix'] ?? 'file_',
-                    isset($file['external'])
+                    !empty($file['external'])
                 );
+
+                $filename = $storage->getDriver()->getAdapter()->getPathPrefix() . $field['path'] . DIRECTORY_SEPARATOR . pathinfo($src, PATHINFO_BASENAME);
+                $size = filesize($filename);
             }
 
             $new[] = [
                 'src' => $src,
+                'name' => $file['name'],
+                'size' => $size,
             ];
         }
 

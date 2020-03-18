@@ -2,7 +2,7 @@
 
 namespace Core\Foundation\Templater\Traits\Mutators\Helpers;
 
-use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 trait StoreFile
 {
@@ -38,7 +38,7 @@ trait StoreFile
      */
     protected static function writeFile(string $original, ?string $content, Filesystem $storage, string $pathOnDisk, string $prefix = 'file_', bool $isExternal = false): ?string
     {
-        if (empty($content) || !$isExternal) {
+        if (empty($content) && !$isExternal) {
             return null;
         }
 
