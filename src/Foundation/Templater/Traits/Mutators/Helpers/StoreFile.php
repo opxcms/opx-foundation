@@ -42,20 +42,21 @@ trait StoreFile
             return null;
         }
 
-        if ($isExternal) {
-            $fileContent = file_get_contents($original);
-        } else {
-            $fileParts = explode(';base64,', $content);
-            $fileContent = base64_decode($fileParts[1]);
-        }
-
         $extension = strtolower(pathinfo($original, PATHINFO_EXTENSION));
         $diskPath = $storage->getDriver()->getAdapter()->getPathPrefix();
         $filename = self::makeUniqueFilename($diskPath . DIRECTORY_SEPARATOR . $pathOnDisk, $prefix, $extension);
-
         $localFilename = $pathOnDisk . DIRECTORY_SEPARATOR . $filename;
 
-        $storage->put($localFilename, $fileContent);
+        if (strpos($original, 'manage/assets/temp/') === 0) {
+            $original = app()->storagePath() . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . pathinfo($original, PATHINFO_BASENAME);
+            rename($original, $diskPath . $localFilename);
+        } elseif ($isExternal) {
+            copy($original, $diskPath . DIRECTORY_SEPARATOR . $localFilename);
+        } else {
+            $fileParts = explode(';base64,', $content);
+            $fileContent = base64_decode($fileParts[1]);
+            $storage->put($localFilename, $fileContent);
+        }
 
         return $storage->url($localFilename);
     }

@@ -5,6 +5,7 @@ namespace Core\Http\Controllers\Assets;
 use Core\Foundation\Module\BaseModule;
 use Core\Http\Controllers\Controller;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AssetsController extends Controller
@@ -27,6 +28,7 @@ class AssetsController extends Controller
         'tiff' => 'image/tiff',
         'icon' => 'image/vnd.microsoft.icon',
         'js' => 'application/javascript',
+        'mp3' => 'audio/mpeg',
     ];
 
     protected $noCacheExtensions = [
@@ -47,11 +49,11 @@ class AssetsController extends Controller
      *
      * @return  ResponseFactory|mixed
      */
-    public function getSystemAsset(string $asset)
+    public function getSystemAsset(Request $request, string $asset)
     {
         $path = app()->getAssetsPath('manage/assets/system');
 
-        return $this->getAsset($path, $asset);
+        return $this->getAsset($request, $path, $asset);
     }
 
     /**
@@ -61,11 +63,11 @@ class AssetsController extends Controller
      *
      * @return  ResponseFactory|mixed
      */
-    public function getPublicAsset(string $asset)
+    public function getPublicAsset(Request $request, string $asset)
     {
         $path = app()->getAssetsPath('manage/assets/public');
 
-        return $this->getAsset($path, $asset);
+        return $this->getAsset($request, $path, $asset);
     }
 
     /**
@@ -76,7 +78,7 @@ class AssetsController extends Controller
      *
      * @return  ResponseFactory|mixed
      */
-    public function getModuleSystemAsset(string $module, string $asset)
+    public function getModuleSystemAsset(Request $request, string $module, string $asset)
     {
         /** @var BaseModule $moduleInstance */
         $moduleInstance = app()->getModule($module);
@@ -87,7 +89,7 @@ class AssetsController extends Controller
 
         $path = $moduleInstance->path('assets' . DIRECTORY_SEPARATOR . 'system');
 
-        return $this->getAsset($path, $asset);
+        return $this->getAsset($request, $path, $asset);
     }
 
     /**
@@ -98,7 +100,7 @@ class AssetsController extends Controller
      *
      * @return  ResponseFactory|mixed
      */
-    public function getModulePublicAsset(string $module, string $asset)
+    public function getModulePublicAsset(Request $request, string $module, string $asset)
     {
         /** @var BaseModule $moduleInstance */
         $moduleInstance = app()->getModule($module);
@@ -109,7 +111,7 @@ class AssetsController extends Controller
 
         $path = $moduleInstance->path('assets' . DIRECTORY_SEPARATOR . 'public');
 
-        return $this->getAsset($path, $asset);
+        return $this->getAsset($request, $path, $asset);
     }
 
     /**
@@ -125,7 +127,22 @@ class AssetsController extends Controller
 
         $name = $request->input('name');
 
-        return $this->getAsset(storage_path('assets'), $asset, $name);
+        return $this->getAsset($request, storage_path('assets'), $asset, $name);
+    }
+
+    /**
+     * Get asset from temporary folder.
+     *
+     * @param Request $request
+     * @param string $asset
+     *
+     * @return  ResponseFactory|mixed
+     */
+    public function getTempAsset(Request $request, string $asset)
+    {
+        $name = $request->input('name');
+
+        return $this->getAsset($request, app()->storagePath() . DIRECTORY_SEPARATOR . 'temp', $asset, $name);
     }
 
     /**
@@ -137,13 +154,13 @@ class AssetsController extends Controller
      *
      * @return  ResponseFactory|mixed
      */
-    public function getAsset(string $path, string $asset, ?string $name = null)
+    public function getAsset(Request $request, string $path, string $asset, ?string $name = null)
     {
         if (!$this->assetExists($path, $asset)) {
             return $this->sendAssetNotFoundResponse($asset);
         }
 
-        return $this->sendAsset($path, $asset, $name);
+        return $this->sendAsset($request, $path, $asset, $name);
     }
 
     /**
@@ -168,10 +185,9 @@ class AssetsController extends Controller
      *
      * @return  mixed
      */
-    public function sendAsset(string $path, string $asset, ?string $name = null)
+    public function sendAsset(Request $request, string $path, string $asset, ?string $name = null)
     {
         $fullAssetPath = $path . DIRECTORY_SEPARATOR . $asset;
-
         $extension = strtolower(pathinfo($fullAssetPath, PATHINFO_EXTENSION));
 
         $headers = [
@@ -180,7 +196,7 @@ class AssetsController extends Controller
         ];
 
         if ($name !== null) {
-            $headers['Content-Disposition'] = 'attachment; filename="' . ($name ?? $asset) . '"';
+            $headers['Content-Disposition'] = 'attachment; filename="' . $name . '"';
         }
 
         return response()->file($fullAssetPath, $headers);
@@ -191,10 +207,73 @@ class AssetsController extends Controller
      *
      * @param string $asset
      *
-     * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return  ResponseFactory|mixed
      */
     public function sendAssetNotFoundResponse(string $asset)
     {
         return response("File '$asset' not found.", 404);
+    }
+
+    /**
+     * Write asset to temp dir.
+     *
+     * @param Request $request
+     *
+     * @return  JsonResponse
+     */
+    public function postTempAsset(Request $request): JsonResponse
+    {
+        $dir = app()->storagePath() . DIRECTORY_SEPARATOR . 'temp';
+        $part = $request->input('part', 0);
+        $original = $request->input('original');
+        $extension = $original ? '.' . pathinfo($original, PATHINFO_EXTENSION) : '';
+
+        if ($part === 0) {
+            $filename = self::makeUniqueFilename($dir, $extension);
+        } else {
+            $filename = $request->input('filename');
+            if (!file_exists($dir . DIRECTORY_SEPARATOR . $filename)) {
+                return response()->json(['message' => 'Error writing file. Probably first part is missing'], 404);
+            }
+        }
+
+        $fullName = $dir . DIRECTORY_SEPARATOR . $filename;
+
+        $content = $request->input('content');
+        $fileParts = explode(';base64,', $content);
+        $content = base64_decode($fileParts[1] ?? $content);
+
+        $written = file_put_contents($fullName, $content, FILE_APPEND);
+
+        if ($written === false) {
+            return response()->json(['message' => "Error writing file [{$fullName}]."], 404);
+        }
+
+        $size = filesize($fullName);
+
+        return response()->json([
+            'filename' => $filename,
+            'src' => "manage/assets/temp/{$filename}",
+            'written' => $written,
+            'total' => $size,
+        ]);
+    }
+
+    /**
+     * Generate unique filename based on random string.
+     *
+     * @param string $directory
+     * @param string $prefix
+     * @param string $extension
+     *
+     * @return  string
+     */
+    protected static function makeUniqueFilename(string $directory, string $extension = ''): string
+    {
+        do {
+            $filename = str_random(16) . ($extension ? '.' . $extension : '');
+        } while (file_exists($directory . DIRECTORY_SEPARATOR . $filename));
+
+        return $filename;
     }
 }

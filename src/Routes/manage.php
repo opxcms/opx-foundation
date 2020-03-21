@@ -64,6 +64,15 @@ Route::name('manage_assets_storage')
     ->where('asset', '.+')
     ->middleware(['manage', 'auth:admin,manager']);
 
+Route::name('manage_assets_temp')
+    ->get('manage/assets/temp/{asset}', 'Assets\AssetsController@getTempAsset')
+    ->where('asset', '.+')
+    ->middleware(['manage', 'auth:admin,manager']);
+
+Route::name('manage_assets_temp_upload')
+    ->post('manage/assets/temp', 'Assets\AssetsController@postTempAsset')
+    ->middleware(['manage', 'auth:admin,manager']);
+
 /*
 |--------------------------------------------------------------------------
 | Api for manage side.

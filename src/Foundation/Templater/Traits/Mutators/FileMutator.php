@@ -53,7 +53,7 @@ class FileMutator implements MutatorInterface
 
                 $src = self::writeFile(
                     $src,
-                    $file['file'],
+                    $file['file'] ?? null,
                     $storage,
                     $field['path'],
                     $field['prefix'] ?? 'file_',

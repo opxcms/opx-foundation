@@ -53,7 +53,7 @@ class AudioMutator implements MutatorInterface
 
                 $src = self::writeFile(
                     $src,
-                    $audio['file'],
+                    $audio['file'] ?? null,
                     $storage,
                     $field['path'],
                     $field['prefix'] ?? 'audio_',
