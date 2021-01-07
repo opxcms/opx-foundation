@@ -2,7 +2,7 @@
 
 namespace Core\Foundation\Module\Traits;
 
-use Core\Foundation\Tools\DB\DataBaseCheck;
+use Core\Tools\DB\DataBaseCheck;
 
 trait CheckMigrations
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Foundation\Tools\DB;
+namespace Core\Tools\DB;
 
 use Exception;
 use Illuminate\Database\Schema\Builder;
