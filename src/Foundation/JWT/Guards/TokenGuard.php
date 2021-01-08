@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Foundation\Guards;
+namespace Core\Foundation\JWT\Guards;
 
 use Exception;
 use Firebase\JWT\JWT;
