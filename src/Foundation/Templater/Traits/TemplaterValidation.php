@@ -82,7 +82,7 @@ trait TemplaterValidation
      *
      * @return  array|null
      */
-    protected function collectFieldsToValidate($attrs): ?array
+    protected function collectFieldsToValidate(array $attrs): ?array
     {
         if (empty($this->template['fields'])) {
             return null;

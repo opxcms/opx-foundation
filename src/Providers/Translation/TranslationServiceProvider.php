@@ -13,7 +13,7 @@ class TranslationServiceProvider extends BaseTranslationServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->registerLoader();
 

@@ -9,9 +9,9 @@ trait MobileDetector
     /**
      * Mobile detector.
      *
-     * @return  \Detection\MobileDetect
+     * @return  MobileDetect
      */
-    public function mobileDetect()
+    public function mobileDetect(): MobileDetect
     {
         if(! $this->mobileDetector) {
             $this->mobileDetector = new MobileDetect();

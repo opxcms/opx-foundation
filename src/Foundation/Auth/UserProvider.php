@@ -19,18 +19,18 @@ class UserProvider implements BaseUserProvider
     /**
      * Users repository.
      *
-     * @var \Core\Foundation\Auth\Contracts\UserRepositoryContract
+     * @var UserRepositoryContract
      */
     protected $userRepository;
 
     /**
      * Create a new file user provider.
      *
-     * @param  array $config
-     * @param  \Core\Foundation\Auth\Contracts\UserRepositoryContract  $users
-     * @return void
+     * @param array $config
+     * @param UserRepositoryContract $userRepository
+     *
      */
-    public function __construct($config, UserRepositoryContract $userRepository)
+    public function __construct(array $config, UserRepositoryContract $userRepository)
     {
         $this->userRepository = $userRepository;
         $this->config = $config;
@@ -40,10 +40,11 @@ class UserProvider implements BaseUserProvider
     /**
      * Retrieve a user by their unique identifier.
      *
-     * @param  mixed  $identifier
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @param mixed $identifier
+     *
+     * @return UserContract|null
      */
-    public function retrieveById($identifier)
+    public function retrieveById($identifier): ?UserContract
     {
         return $this->userRepository->retrieveById($identifier);
     }
@@ -51,10 +52,11 @@ class UserProvider implements BaseUserProvider
     /**
      * Retrieve a user by the given credentials.
      *
-     * @param  array  $credentials
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @param array $credentials
+     *
+     * @return UserContract|null
      */
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): ?UserContract
     {
         return $this->userRepository->retrieveByCredentials($credentials);
     }
@@ -62,11 +64,12 @@ class UserProvider implements BaseUserProvider
     /**
      * Validate a user against the given credentials.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  array  $credentials
+     * @param UserContract $user
+     * @param array $credentials
+     *
      * @return bool
      */
-    public function validateCredentials(UserContract $user, array $credentials)
+    public function validateCredentials(UserContract $user, array $credentials): bool
     {
         return $this->userRepository->validateCredentials($user, $credentials);
     }
@@ -74,11 +77,12 @@ class UserProvider implements BaseUserProvider
     /**
      * Retrieve a user by their unique identifier and "remember me" token.
      *
-     * @param  mixed  $identifier
-     * @param  string  $token
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @param mixed $identifier
+     * @param string $token
+     *
+     * @return UserContract|null
      */
-    public function retrieveByToken($identifier, $token)
+    public function retrieveByToken($identifier, $token): ?UserContract
     {
         return $this->userRepository->retrieveByToken($identifier, $token);
     }
@@ -86,11 +90,12 @@ class UserProvider implements BaseUserProvider
     /**
      * Update the "remember me" token for the given user in storage.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string  $token
+     * @param UserContract $user
+     * @param string $token
+     *
      * @return void
      */
-    public function updateRememberToken(UserContract $user, $token)
+    public function updateRememberToken(UserContract $user, $token): void
     {
         $this->userRepository->updateRememberToken($user, $token);
     }

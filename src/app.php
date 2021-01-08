@@ -13,7 +13,7 @@ use Core\Foundation\Application;
 */
 
 $app = new Application(
-    realpath(__DIR__.'/../')
+    dirname(__DIR__) . '/'
 );
 
 /*

@@ -73,9 +73,9 @@ trait Publishing
     /**
      * Publish model.
      *
-     * @param string $published
-     * @param string $publishStart
-     * @param string $publishEnd
+     * @param string|null $published
+     * @param string|null $publishStart
+     * @param string|null $publishEnd
      *
      * @return  void
      */

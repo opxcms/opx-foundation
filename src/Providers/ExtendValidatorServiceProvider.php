@@ -11,7 +11,7 @@ class ExtendValidatorServiceProvider extends ServiceProvider
 {
 //    use DataTemplateableTemplate;
 
-    public function boot()
+    public function boot(): void
     {
 //	    Validator::extend('alias', function ($attribute, $value, $parameters, $validator) {
 //	    	$table = $validator->customAttributes['table'] ?? null;

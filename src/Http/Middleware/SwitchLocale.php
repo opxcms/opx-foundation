@@ -20,13 +20,13 @@ class SwitchLocale
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string|null  $localeKey
+     * @param Request $request
+     * @param Closure $next
+     * @param string|null $localeKey
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $localeKey = 'site')
+    public function handle(Request $request, Closure $next, $localeKey = 'site')
     {
         $this->localeKey = $localeKey;
 
@@ -55,11 +55,11 @@ class SwitchLocale
     /**
      * Make locale key for storing in session.
      *
-     * @param  string  $key
+     * @param string $key
      *
      * @return  string
      */
-    public function makeKey($key)
+    public function makeKey(string $key): string
     {
         return $this->localeSessionKeyPrefix.$key;
     }
@@ -67,7 +67,7 @@ class SwitchLocale
     /**
      * Get locale stored in session.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      *
      * @return  mixed|null
      */
@@ -79,12 +79,12 @@ class SwitchLocale
     /**
      * Set new locale and store it in session.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string  $locale
+     * @param Request $request
+     * @param string $locale
      *
      * @return  void
      */
-    public function setLocale(Request $request, $locale)
+    public function setLocale(Request $request, string $locale): void
     {
         Site::setLocale($locale);
         $request->session()->put($this->makeKey($this->localeKey), $locale);

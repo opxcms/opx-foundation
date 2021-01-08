@@ -3,6 +3,7 @@
 namespace Core\Tools\Modules;
 
 use Core\Foundation\Application;
+use JsonException;
 use Symfony\Component\Finder\Finder;
 
 class ModulesLister
@@ -76,6 +77,7 @@ class ModulesLister
      * @param Application $app
      *
      * @return  array
+     * @throws JsonException
      */
     public static function discoverModules(Application $app): array
     {
@@ -85,7 +87,7 @@ class ModulesLister
             return [];
         }
 
-        $packages = json_decode(file_get_contents($installedPath), true);
+        $packages = json_decode(file_get_contents($installedPath), true, 512, JSON_THROW_ON_ERROR);
         $modules = [];
 
         $discovered = [];

@@ -3,14 +3,20 @@
 namespace Core\Foundation\SocketBroadcaster;
 
 
+use Core\Foundation\WebsocketClient\Exceptions\SocketException;
 use Core\Foundation\WebsocketClient\WebsocketClient;
+use Exception;
 use Illuminate\Broadcasting\Broadcasters\Broadcaster;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use JsonException;
 
 class SocketBroadcaster extends Broadcaster
 {
     protected $app;
     protected $config;
+
+    /** @var WebsocketClient */
     protected $socketClient;
 
     public function __construct($app, $config)
@@ -22,7 +28,8 @@ class SocketBroadcaster extends Broadcaster
     /**
      * Authenticate the incoming request for a given channel.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param Request $request
+     *
      * @return mixed
      */
     public function auth($request)
@@ -33,8 +40,9 @@ class SocketBroadcaster extends Broadcaster
     /**
      * Return the valid authentication response.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  mixed $result
+     * @param Request $request
+     * @param mixed $result
+     *
      * @return mixed
      */
     public function validAuthenticationResponse($request, $result)
@@ -45,15 +53,16 @@ class SocketBroadcaster extends Broadcaster
     /**
      * Broadcast the given event.
      *
-     * @param  array  $channels
-     * @param  string  $event
-     * @param  array  $payload
+     * @param array $channels
+     * @param string $event
+     * @param array $payload
      *
      * @return  void
      *
-     * @throws  \Core\Foundation\WebsocketClient\Exceptions\SocketException
+     * @throws  JsonException
+     * @throws Exception
      */
-    public function broadcast(array $channels, $event, array $payload = [])
+    public function broadcast(array $channels, $event, array $payload = []): void
     {
         $connection = $this->socketClient();
 
@@ -73,18 +82,18 @@ class SocketBroadcaster extends Broadcaster
      *
      * @return WebsocketClient
      *
-     * @throws \Core\Foundation\WebsocketClient\Exceptions\SocketException
+     * @throws Exception
      */
-    protected function socketClient()
+    protected function socketClient(): WebsocketClient
     {
-        if(! $this->socketClient) {
-            $server = $this->config['server'] ?? 'ws://'.$_SERVER['SERVER_NAME'];
+        if (!$this->socketClient) {
+            $server = $this->config['server'] ?? 'ws://' . $_SERVER['SERVER_NAME'];
             $port = $this->config['port'] ?? '49123';
 
             $this->socketClient = new WebsocketClient("{$server}:{$port}");
         }
 
-        if(! $this->socketClient->isConnected()) {
+        if (!$this->socketClient->isConnected()) {
             $this->socketClient->connect();
         }
 

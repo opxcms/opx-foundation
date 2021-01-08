@@ -4,10 +4,18 @@ namespace Core\Console;
 
 use Core\Console\Commands\DiscoverModulesCommand;
 use Core\Foundation\Application;
+use Core\Foundation\Bootstrap\LoadRawConfiguration;
+use Core\Foundation\Bootstrap\RegisterModules;
 use Core\Jobs\CronLastRunTimestampJob;
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Bootstrap\BootProviders;
+use Illuminate\Foundation\Bootstrap\HandleExceptions;
+use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
+use Illuminate\Foundation\Bootstrap\RegisterFacades;
+use Illuminate\Foundation\Bootstrap\RegisterProviders;
+use Illuminate\Foundation\Bootstrap\SetRequestForConsole;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -22,14 +30,14 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $bootstrappers = [
-        \Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables::class,
-        \Core\Foundation\Bootstrap\LoadRawConfiguration::class,
-        \Illuminate\Foundation\Bootstrap\HandleExceptions::class,
-        \Core\Foundation\Bootstrap\RegisterModules::class,
-        \Illuminate\Foundation\Bootstrap\RegisterFacades::class,
-        \Illuminate\Foundation\Bootstrap\SetRequestForConsole::class,
-        \Illuminate\Foundation\Bootstrap\RegisterProviders::class,
-        \Illuminate\Foundation\Bootstrap\BootProviders::class,
+        LoadEnvironmentVariables::class,
+        LoadRawConfiguration::class,
+        HandleExceptions::class,
+        RegisterModules::class,
+        RegisterFacades::class,
+        SetRequestForConsole::class,
+        RegisterProviders::class,
+        BootProviders::class,
     ];
     /**
      * The Artisan commands provided by your application.

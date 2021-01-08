@@ -60,7 +60,7 @@ trait TemplaterLocalization
      *
      * @return  array|null
      */
-    protected function resolveCaption($subject): ?array
+    protected function resolveCaption(?array $subject): ?array
     {
         if (!$subject) {
             return null;

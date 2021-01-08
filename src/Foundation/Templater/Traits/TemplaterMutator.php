@@ -2,6 +2,8 @@
 
 namespace Core\Foundation\Templater\Traits;
 
+use Illuminate\Support\Str;
+
 trait TemplaterMutator
 {
     public function mutateValues(): self
@@ -18,7 +20,7 @@ trait TemplaterMutator
                 continue;
             }
 
-            $mutator = 'Core\\Foundation\\Templater\\Traits\\Mutators\\' . title_case($type) . 'Mutator';
+            $mutator = 'Core\\Foundation\\Templater\\Traits\\Mutators\\' . Str::title($type) . 'Mutator';
 
             if (class_exists($mutator)) {
                 $this->template['fields'][$key]['value'] = call_user_func([$mutator, 'get'], $field['value'] ?? null);
@@ -41,7 +43,7 @@ trait TemplaterMutator
         $type = $field['type'] ?? null;
 
         if ($type !== null) {
-            $mutator = 'Core\\Foundation\\Templater\\Traits\\Mutators\\' . title_case($type) . 'Mutator';
+            $mutator = 'Core\\Foundation\\Templater\\Traits\\Mutators\\' . Str::title($type) . 'Mutator';
 
             if (class_exists($mutator)) {
                 $value = call_user_func([$mutator, $method], $value, $field);

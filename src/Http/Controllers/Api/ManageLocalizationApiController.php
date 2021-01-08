@@ -26,7 +26,7 @@ class ManageLocalizationApiController extends Controller
     ];
 
     /**
-     * Get initial values for localizator.
+     * Get initial values for localization.
      *
      * @param Request $request
      *
@@ -79,7 +79,7 @@ class ManageLocalizationApiController extends Controller
      *
      * @return  array
      */
-    protected function parseTranslations($translations): array
+    protected function parseTranslations(array $translations): array
     {
         $parsed = [];
 
@@ -106,9 +106,9 @@ class ManageLocalizationApiController extends Controller
      *
      * @return  array
      */
-    protected function flattenTranslations($key, $translations): array
+    protected function flattenTranslations(string $key, array $translations): array
     {
-        if(empty($translations) || is_string($translations)) {
+        if(empty($translations)) {
             return [];
         }
 

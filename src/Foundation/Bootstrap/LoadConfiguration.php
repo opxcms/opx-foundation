@@ -4,6 +4,7 @@ namespace Core\Foundation\Bootstrap;
 
 use Exception;
 use Illuminate\Support\Arr;
+use RuntimeException;
 use SplFileInfo;
 use Illuminate\Config\Repository;
 use Symfony\Component\Finder\Finder;
@@ -18,13 +19,13 @@ class LoadConfiguration
     /**
      * Bootstrap the given application.
      *
-     * @param \Core\Foundation\Application $app
+     * @param Application $app
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function bootstrap(Application $app)
+    public function bootstrap(Application $app): void
     {
         $items = [];
 
@@ -72,17 +73,18 @@ class LoadConfiguration
     /**
      * Load the configuration items from all of the files.
      *
-     * @param \Core\Foundation\Application $app
-     * @param \Illuminate\Contracts\Config\Repository $repository
+     * @param Application $app
+     * @param RepositoryContract $repository
+     *
      * @return void
-     * @throws \Exception
+     * @throws RuntimeException
      */
-    protected function loadConfigurationFiles(Application $app, RepositoryContract $repository)
+    protected function loadConfigurationFiles(Application $app, RepositoryContract $repository): void
     {
         $mainFiles = $this->getConfigurationFiles($app->configPath());
 
         if (!isset($mainFiles['app'])) {
-            throw new Exception('Unable to load the "app" configuration file.');
+            throw new RuntimeException('Unable to load the "app" configuration file.');
         }
 
         $localFiles = $this->getConfigurationFiles($app->localConfigPath());
@@ -108,9 +110,10 @@ class LoadConfiguration
      * Get all of the configuration files for the application in given location.
      *
      * @param string $configPath
+     *
      * @return array
      */
-    protected function getConfigurationFiles($configPath)
+    protected function getConfigurationFiles(string $configPath): array
     {
         $files = [];
 
@@ -121,7 +124,9 @@ class LoadConfiguration
 
             $directory = $this->getNestedDirectory($file, $configPath);
 
-            $files[$directory . basename($file->getRealPath(), '.php')] = $file->getRealPath();
+            $realPath = $file->getRealPath();
+
+            $files[$directory . basename($realPath, '.php')] = $realPath;
         }
 
         ksort($files, SORT_NATURAL);
@@ -132,11 +137,12 @@ class LoadConfiguration
     /**
      * Get the configuration file nesting path.
      *
-     * @param \SplFileInfo $file
+     * @param SplFileInfo $file
      * @param string $configPath
+     *
      * @return string
      */
-    protected function getNestedDirectory(SplFileInfo $file, $configPath)
+    protected function getNestedDirectory(SplFileInfo $file, string $configPath): string
     {
         $directory = $file->getPath();
 
@@ -154,7 +160,7 @@ class LoadConfiguration
      *
      * @return  string
      */
-    protected function resolveProfile(RepositoryContract $repository)
+    protected function resolveProfile(RepositoryContract $repository): string
     {
         $host = request()->server('SERVER_NAME');
 
@@ -164,7 +170,7 @@ class LoadConfiguration
                     if (is_string($profileOptions['domain'])) {
                         $profileOptions['domain'] = [$profileOptions['domain']];
                     }
-                    if (in_array($host, $profileOptions['domain'])) {
+                    if (in_array($host, $profileOptions['domain'], true)) {
                         return $profileKey;
                     }
                 }
@@ -183,7 +189,7 @@ class LoadConfiguration
      *
      * @return  RepositoryContract
      */
-    protected function applyProfile(RepositoryContract $repository, $profile)
+    protected function applyProfile(RepositoryContract $repository, string $profile): RepositoryContract
     {
         if ('default' === $profile) {
             return $repository;

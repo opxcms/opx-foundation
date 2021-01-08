@@ -30,7 +30,7 @@ trait TemplaterAuthorization
      *
      * @return  $this
      */
-    public function forUser($user): self
+    public function forUser(UserContract $user): self
     {
         $this->user = $user;
 
@@ -171,7 +171,7 @@ trait TemplaterAuthorization
      *
      * @return  array|null
      */
-    protected function resolvePermission($subject): ?array
+    protected function resolvePermission(?array $subject): ?array
     {
         if (empty($subject)) {
             return null;
@@ -191,7 +191,7 @@ trait TemplaterAuthorization
             return null;
         }
 
-        $subject['can_view'] = $canView;
+        $subject['can_view'] = true;
         $subject['can_edit'] = $canEdit;
         unset($subject['permissions']);
 
@@ -205,7 +205,7 @@ trait TemplaterAuthorization
      *
      * @return  bool
      */
-    protected function checkPermission($permission): bool
+    protected function checkPermission(?string $permission): bool
     {
         if ($permission === null || $permission === '') {
             return true;

@@ -7,12 +7,12 @@ trait MetaData
     /**
      * Add tag to array.
      *
-     * @param  string $name
-     * @param  array $content
+     * @param string $name
+     * @param array $content
      *
      * @return  $this
      */
-    public function addMetaTag($name, $content): self
+    public function addMetaTag(string $name, array $content): self
     {
         $this->metaTags[] = ['name' => $name, 'content' => $content];
 
@@ -22,11 +22,11 @@ trait MetaData
     /**
      * Set metaTitle.
      *
-     * @param  string $metaTitle
+     * @param string $metaTitle
      *
      * @return  $this
      */
-    public function setMetaTitle($metaTitle): self
+    public function setMetaTitle(string $metaTitle): self
     {
         $this->metaTitle = $metaTitle;
 
@@ -36,11 +36,11 @@ trait MetaData
     /**
      * Set metaDescription.
      *
-     * @param  string $metaDescription
+     * @param string $metaDescription
      *
      * @return  $this
      */
-    public function setMetaDescription($metaDescription): self
+    public function setMetaDescription(string $metaDescription): self
     {
         $this->metaDescription = $metaDescription;
 
@@ -50,11 +50,11 @@ trait MetaData
     /**
      * Set metaKeywords.
      *
-     * @param  string $metaKeywords
+     * @param string $metaKeywords
      *
      * @return  $this
      */
-    public function setMetaKeywords($metaKeywords): self
+    public function setMetaKeywords(string $metaKeywords): self
     {
         $this->metaKeywords = $metaKeywords;
 
@@ -64,11 +64,11 @@ trait MetaData
     /**
      * Set metaIndex.
      *
-     * @param  boolean $metaIndex
+     * @param boolean $metaIndex
      *
      * @return  $this
      */
-    public function setMetaIndex($metaIndex): self
+    public function setMetaIndex(bool $metaIndex): self
     {
         $this->metaIndex = $metaIndex;
 
@@ -78,11 +78,11 @@ trait MetaData
     /**
      * Set metaFollow.
      *
-     * @param  boolean $metaFollow
+     * @param boolean $metaFollow
      *
      * @return  $this
      */
-    public function setMetaFollow($metaFollow): self
+    public function setMetaFollow(bool $metaFollow): self
     {
         $this->metaFollow = $metaFollow;
 
@@ -92,11 +92,11 @@ trait MetaData
     /**
      * Set metaCanonical.
      *
-     * @param  string $metaCanonical
+     * @param string $metaCanonical
      *
      * @return  $this
      */
-    public function setMetaCanonical($metaCanonical): self
+    public function setMetaCanonical(string $metaCanonical): self
     {
         $this->metaCanonical = $metaCanonical;
 
@@ -106,11 +106,11 @@ trait MetaData
     /**
      * Set metaPrev.
      *
-     * @param  string $metaPrev
+     * @param string $metaPrev
      *
      * @return  $this
      */
-    public function setMetaPrev($metaPrev): self
+    public function setMetaPrev(string $metaPrev): self
     {
         $this->metaPrev = $metaPrev;
 
@@ -120,11 +120,11 @@ trait MetaData
     /**
      * Set metaNext.
      *
-     * @param  string $metaNext
+     * @param string $metaNext
      *
      * @return  $this
      */
-    public function setMetaNext($metaNext): self
+    public function setMetaNext(string $metaNext): self
     {
         $this->metaNext = $metaNext;
 
@@ -134,11 +134,11 @@ trait MetaData
     /**
      * Set metaTags.
      *
-     * @param  string $metaTags
+     * @param string $metaTags
      *
      * @return  $this
      */
-    public function setMetaTags($metaTags): self
+    public function setMetaTags(string $metaTags): self
     {
         $this->metaTags = $metaTags;
 
@@ -184,7 +184,7 @@ trait MetaData
             $tagName = $tag['name'];
 
             $currentTagBuffer = implode(' ', array_map(
-                function ($value, $key) {
+                static function ($value, $key) {
                     return "{$key}=\"{$value}\"";
                 },
                 $tag['content'],

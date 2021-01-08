@@ -6,17 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class OpxBlueprint extends Blueprint
 {
-
-    /**
-     * Add id attribute to the table.
-     *
-     * @return  void
-     */
-    public function id(): void
-    {
-        $this->increments('id');
-    }
-
     /**
      * Add parent_id attribute to the table.
      *

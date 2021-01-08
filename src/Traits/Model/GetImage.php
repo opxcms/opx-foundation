@@ -2,6 +2,8 @@
 
 namespace Core\Traits\Model;
 
+use JsonException;
+
 trait GetImage
 {
     /**
@@ -11,6 +13,7 @@ trait GetImage
      * @param int|null $index
      *
      * @return  string|array|null
+     * @throws JsonException
      */
     public function getImageSrc($field = 'image', $index = 0)
     {
@@ -21,7 +24,7 @@ trait GetImage
         }
 
         if (!is_array($img)) {
-            $img = json_decode($img, true);
+            $img = json_decode($img, true, 512, JSON_THROW_ON_ERROR);
         }
 
         if ($index !== null) {

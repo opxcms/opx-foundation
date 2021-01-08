@@ -145,7 +145,7 @@ class Kernel extends HttpKernel
      *
      * @return void
      */
-    public function addRouteMiddleware($routeMiddleware): void
+    public function addRouteMiddleware(array $routeMiddleware): void
     {
         $this->routeMiddleware = array_merge($this->routeMiddleware, $routeMiddleware);
     }

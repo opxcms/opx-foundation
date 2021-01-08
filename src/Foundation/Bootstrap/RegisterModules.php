@@ -3,6 +3,7 @@
 namespace Core\Foundation\Bootstrap;
 
 use Core\Tools\Modules\ModulesLister;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Foundation\Application;
 
 class RegisterModules
@@ -10,10 +11,12 @@ class RegisterModules
     /**
      * Bootstrap the given application.
      *
-     * @param \Core\Foundation\Application|\Illuminate\Contracts\Foundation\Application $app
+     * @param \Core\Foundation\Application|Application $app
+     *
      * @return void
+     * @throws BindingResolutionException
      */
-    public function bootstrap(Application $app)
+    public function bootstrap(Application $app): void
     {
         if ($app->configurationIsCached()) {
             return;

@@ -45,7 +45,7 @@ class UserSettingsFileRepository extends UserSettingsRepository
      *
      * @return  void
      */
-    public function setSettings($userId, $settings, $key = null): void
+    public function setSettings($userId, array $settings, $key = null): void
     {
         $repositoryFileName = $this->getRepositoryFileName($userId);
         $repositoryExists = file_exists($repositoryFileName);

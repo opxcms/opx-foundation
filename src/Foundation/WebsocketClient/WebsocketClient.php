@@ -8,6 +8,8 @@ use Core\Foundation\WebsocketClient\Exceptions\ConnectionException;
 use Core\Foundation\WebsocketClient\Exceptions\BadUrlException;
 use Core\Foundation\WebsocketClient\Exceptions\WebSocketProtocolException;
 use Core\Foundation\WebsocketClient\Exceptions\BadOperationCodeException;
+use Exception;
+use JsonException;
 
 class WebsocketClient extends WebSocketProtocol
 {
@@ -46,7 +48,6 @@ class WebsocketClient extends WebSocketProtocol
      *
      * @return  void
      *
-     * @throws  ConnectionException
      */
     public function __destruct() {
         $this->disconnect();
@@ -56,8 +57,9 @@ class WebsocketClient extends WebSocketProtocol
      * Open connection to server.
      *
      * @return  boolean
+     * @throws Exception
      */
-    public function connect()
+    public function connect(): bool
     {
         try {
             $this->openConnection($this->socketAddress);
@@ -74,7 +76,7 @@ class WebsocketClient extends WebSocketProtocol
      *
      * @return  boolean
      */
-    public function disconnect()
+    public function disconnect(): bool
     {
         try {
             $this->closeConnection();
@@ -89,15 +91,16 @@ class WebsocketClient extends WebSocketProtocol
     /**
      * Send data to server.
      *
-     * @param  mixed  $payload
+     * @param mixed $payload
      *
      * @return  boolean
+     * @throws JsonException
      */
-    public function send($payload)
+    public function send($payload): bool
     {
         // You can perform type conversions here
         if(is_array($payload)) {
-            $payload = json_encode($payload);
+            $payload = json_encode($payload, JSON_THROW_ON_ERROR);
         }
 
         try {
@@ -129,7 +132,7 @@ class WebsocketClient extends WebSocketProtocol
         return $received;
     }
 
-    public function getLastError()
+    public function getLastError(): ?string
     {
         return $this->lastError;
     }

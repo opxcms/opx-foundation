@@ -2,6 +2,7 @@
 
 namespace Core\Foundation\Database;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\Facades\Schema;
@@ -26,6 +27,7 @@ abstract class OpxMigration extends Migration
      * OpxMigration constructor.
      *
      * @return  void
+     * @throws BindingResolutionException
      */
     public function __construct()
     {

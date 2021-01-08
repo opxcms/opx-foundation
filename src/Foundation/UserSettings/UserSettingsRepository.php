@@ -3,6 +3,8 @@
 namespace Core\Foundation\UserSettings;
 
 
+use Illuminate\Contracts\Container\BindingResolutionException;
+
 class UserSettingsRepository implements UserSettingsRepositoryInterface
 {
     /** @var  mixed */
@@ -12,6 +14,7 @@ class UserSettingsRepository implements UserSettingsRepositoryInterface
      * UserSettingsFileRepository constructor.
      *
      * @return  void
+     * @throws BindingResolutionException
      */
     public function __construct()
     {
@@ -21,12 +24,12 @@ class UserSettingsRepository implements UserSettingsRepositoryInterface
     /**
      * Get settings for given user and guard.
      *
-     * @param  mixed $userId
-     * @param  mixed $key
+     * @param mixed $userId
+     * @param mixed $key
      *
      * @return  array
      */
-    public function getSettings($userId, $key = null)
+    public function getSettings($userId, $key = null): array
     {
         return [];
     }
@@ -34,13 +37,13 @@ class UserSettingsRepository implements UserSettingsRepositoryInterface
     /**
      * Set settings for given user and guard.
      *
-     * @param  mixed $userId
-     * @param  array $settings
-     * @param  mixed $key
+     * @param mixed $userId
+     * @param array $settings
+     * @param mixed $key
      *
      * @return  void
      */
-    public function setSettings($userId, $settings, $key = null)
+    public function setSettings($userId, array $settings, $key = null): void
     {
 
     }

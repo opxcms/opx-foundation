@@ -3,6 +3,7 @@
 namespace Core\Tools\DB;
 
 use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Schema\Builder;
 
 class DataBaseCheck
@@ -14,6 +15,7 @@ class DataBaseCheck
      * @param Builder|null $builder
      *
      * @return  boolean
+     * @throws BindingResolutionException
      */
     public static function isTablesMigrated($tables = null, $builder = null): bool
     {
@@ -45,8 +47,9 @@ class DataBaseCheck
      * @param Builder|null $builder
      *
      * @return  boolean
+     * @throws BindingResolutionException
      */
-    protected static function isTableMigrated($table, $builder = null): bool
+    protected static function isTableMigrated(?string $table, $builder = null): bool
     {
         if (!$table) {
             return true;

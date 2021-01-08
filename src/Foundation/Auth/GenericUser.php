@@ -24,7 +24,7 @@ class GenericUser implements DefaultUserContract, UserContract
      * Create a new generic User object.
      *
      * @param array $attributes
-     * @param \Core\Foundation\Auth\Contracts\UserRepositoryContract|null $provider
+     * @param UserRepositoryContract|null $provider
      *
      * @return void
      */
@@ -126,7 +126,7 @@ class GenericUser implements DefaultUserContract, UserContract
      *
      * @return mixed
      */
-    public function __get($key)
+    public function __get(string $key)
     {
         return $this->attributes[$key];
     }
@@ -139,7 +139,7 @@ class GenericUser implements DefaultUserContract, UserContract
      *
      * @return void
      */
-    public function __set($key, $value)
+    public function __set(string $key, $value)
     {
         $this->attributes[$key] = $value;
     }
@@ -151,7 +151,7 @@ class GenericUser implements DefaultUserContract, UserContract
      *
      * @return bool
      */
-    public function __isset($key)
+    public function __isset(string $key): bool
     {
         return isset($this->attributes[$key]);
     }
@@ -163,7 +163,7 @@ class GenericUser implements DefaultUserContract, UserContract
      *
      * @return void
      */
-    public function __unset($key)
+    public function __unset(string $key)
     {
         unset($this->attributes[$key]);
     }

@@ -14,7 +14,7 @@ class Application extends \Illuminate\Foundation\Application
      *
      * @var string
      */
-    protected const OPX_VERSION = '0.5.1';
+    protected const OPX_VERSION = '0.7.1';
 
     /** @var  string  The environment file to load during bootstrapping. */
     protected $environmentFile = '.env';

@@ -2,7 +2,6 @@
 
 namespace Core\Foundation\Module;
 
-//use Core\Console\Kernel;
 use Core\Foundation\Application;
 use Core\Foundation\Module\Traits\CheckMigrations;
 use Illuminate\Support\Facades\File;
@@ -18,7 +17,7 @@ abstract class BaseModule extends ServiceProvider
     use CheckMigrations;
 
     /** @var Application  The application instance. Override for IDE. */
-    protected $app;
+    public $app;
 
     /** @var array  Configurations for module. */
     protected $config = [];
@@ -182,11 +181,7 @@ abstract class BaseModule extends ServiceProvider
             return $this->config;
         }
 
-        if (!isset($this->config[$key])) {
-            return null;
-        }
-
-        return $this->config[$key];
+        return $this->config[$key] ?? null;
     }
 
     /**
@@ -215,7 +210,7 @@ abstract class BaseModule extends ServiceProvider
      *
      * @return  mixed
      */
-    public function view($view)
+    public function view(string $view)
     {
         return View::make($this->name() . '::' . $view);
     }
@@ -227,7 +222,7 @@ abstract class BaseModule extends ServiceProvider
      *
      * @return string
      */
-    public function viewName($view): string
+    public function viewName(string $view): string
     {
         return $this->name() . '::' . $view;
     }
@@ -258,7 +253,7 @@ abstract class BaseModule extends ServiceProvider
      *
      * @return void
      */
-    public function registerPublicApiRoutes($profile): void
+    public function registerPublicApiRoutes(?string $profile): void
     {
         if (!$registrar = $this->getRouteRegistrar()) {
             return;
@@ -303,7 +298,7 @@ abstract class BaseModule extends ServiceProvider
      *
      * @return void
      */
-    public function registerPublicRoutes($profile): void
+    public function registerPublicRoutes(?string $profile): void
     {
         if (!$registrar = $this->getRouteRegistrar()) {
             return;
@@ -325,7 +320,7 @@ abstract class BaseModule extends ServiceProvider
      *
      * @throws \Exception
      */
-    public function runController($controllerName, $method, ...$parameters)
+    public function runController(string $controllerName, string $method, ...$parameters)
     {
         $controller = $this->app->make($this->namespace('Controllers\\') . $controllerName);
 

@@ -11,8 +11,8 @@ trait CheckMigrations
      *
      * @return boolean
      */
-	public function isMigrated()
-	{
+	public function isMigrated(): bool
+    {
 		if(empty($this->config('tables'))) {
 			return true;
 		}

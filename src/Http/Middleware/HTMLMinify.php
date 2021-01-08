@@ -3,20 +3,22 @@
 namespace Core\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class HTMLMinify
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param Request $request
+     * @param Closure $next
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        /** @var \Illuminate\Http\Response $response */
+        /** @var Response $response */
         $response = $next($request);
 
         if($response->getStatusCode() === 200) {

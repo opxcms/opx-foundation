@@ -4,6 +4,7 @@ namespace Core\Http\Controllers;
 
 use Core\Facades\Site;
 use Core\Foundation\Module\BaseModule;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Response;
@@ -13,6 +14,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class ModelRenderController extends BaseController
@@ -85,6 +87,7 @@ class ModelRenderController extends BaseController
      * Get parameters from current route.
      *
      * @return  void
+     * @throws BindingResolutionException
      */
     protected function extractParameters(): void
     {
@@ -98,7 +101,7 @@ class ModelRenderController extends BaseController
 
         if (isset($parameters[1])) {
             $modelClass = $this->models[$parameters[1]]
-                ?? $this->module->namespace('Models\\' . str_replace('_', '', title_case($parameters[1])));
+                ?? $this->module->namespace('Models\\' . str_replace('_', '', Str::title($parameters[1])));
         }
 
         $id = $parameters[2] ?? null;
@@ -198,7 +201,7 @@ class ModelRenderController extends BaseController
         }
 
         $layoutName = str_replace('.blade.php', '', $layoutFile);
-        $method = 'render' . str_replace('_', '', title_case($layoutName)) . 'Layout';
+        $method = 'render' . str_replace('_', '', Str::title($layoutName)) . 'Layout';
 
         if (method_exists($this, $method)) {
             return $this->$method($layoutName);

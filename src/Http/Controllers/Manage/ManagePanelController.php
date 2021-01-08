@@ -36,7 +36,7 @@ class ManagePanelController extends Controller
      *
      * @return  void
      */
-    protected function collectAssetsFromModules()
+    protected function collectAssetsFromModules(): void
     {
         // TODO Collect assets set in modules
     }

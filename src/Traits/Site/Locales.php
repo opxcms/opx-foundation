@@ -46,7 +46,7 @@ trait Locales
      *
      * @return  boolean
      */
-    public function setLocale($locale, $skipCheck = false): bool
+    public function setLocale(string $locale, $skipCheck = false): bool
     {
         $installed = $this->installedLocales();
 

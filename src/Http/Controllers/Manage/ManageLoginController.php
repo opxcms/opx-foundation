@@ -5,7 +5,9 @@ namespace Core\Http\Controllers\Manage;
 use Core\Facades\Site;
 use Core\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\StatefulGuard;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Core\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,7 +46,7 @@ class ManageLoginController extends Controller
     /**
      * Show the manage login form.
      *
-     * @return  Response|View
+     * @return Application|Factory|\Illuminate\Contracts\View\View|Response|View
      */
     public function showLoginForm()
     {

@@ -2,12 +2,13 @@
 
 namespace Core\Providers\Route;
 
+use Core\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /** @var  \Core\Foundation\Application */
+    /** @var  Application */
     protected $app;
 
     /**
@@ -23,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return  void
      */
-    public function map()
+    public function map(): void
     {
         $this->mapManageRoutes();
 

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use JsonException;
 
 class APIFormController extends BaseController
 {
@@ -17,7 +18,7 @@ class APIFormController extends BaseController
     public $component = 'opx-form';
 
     /** @var null|string Url to controller */
-    public $base = null;
+    public $base;
 
     /**
      * Returns list component with associated settings.
@@ -31,7 +32,7 @@ class APIFormController extends BaseController
      *
      * @return  JsonResponse
      */
-    public function responseFormComponent($id, Templater $template, $caption, $save = null, $redirect = null, $hints = false): JsonResponse
+    public function responseFormComponent(?int $id, Templater $template, string $caption, $save = null, $redirect = null, $hints = false): JsonResponse
     {
         $data = $template->get();
 
@@ -61,7 +62,7 @@ class APIFormController extends BaseController
      *
      * @return  JsonResponse
      */
-    public function responseValidationError($errors): JsonResponse
+    public function responseValidationError(array $errors): JsonResponse
     {
         return response()->json(['message' => 'messages.validation_error', 'errors' => $errors], 420);
     }
@@ -138,16 +139,7 @@ class APIFormController extends BaseController
      */
     protected function storeImageFromRequest(Request $request, string $templatePath): JsonResponse
     {
-        $template = new Templater($templatePath);
-
-        $name = $request->input('name');
-        $data = $request->input('data');
-
-        // Just need to set field with image to template. Image will be stored automaticly according template settings.
-        $template->fillValuesFromArray([$name => [$data]]);
-        $res = json_decode($template->getEditableValues()[$name], true)[0];
-
-        return response()->json($res);
+        return $this->storeFilesFromRequest($request, $templatePath);
     }
 
     /**
@@ -157,6 +149,7 @@ class APIFormController extends BaseController
      * @param string $templatePath
      *
      * @return  JsonResponse
+     * @throws JsonException
      */
     protected function storeFilesFromRequest(Request $request, string $templatePath): JsonResponse
     {
@@ -167,7 +160,7 @@ class APIFormController extends BaseController
 
         // Just need to set field with image to template. Image will be stored automaticly according template settings.
         $template->fillValuesFromArray([$name => [$data]]);
-        $res = json_decode($template->getEditableValues()[$name], true)[0];
+        $res = json_decode($template->getEditableValues()[$name], true, 512, JSON_THROW_ON_ERROR)[0];
 
         return response()->json($res);
     }

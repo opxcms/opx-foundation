@@ -3,23 +3,26 @@
 namespace Core\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class RedirectIndex
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string|null  $guard
+     * @param Request $request
+     * @param Closure $next
+     * @param string|null $guard
+     *
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next, $guard = null)
     {
 
 	    $uri = $request->url();
 
-	    if(ends_with($uri, ['index.php', 'index.htm', 'index.html', 'index'])) {
+	    if(Str::endsWith($uri, ['index.php', 'index.htm', 'index.html', 'index'])) {
 			$parameters = $request->getQueryString();
 		    $url = $request->getSchemeAndHttpHost() . (!empty($parameters) ? '?'.$parameters : '');
 

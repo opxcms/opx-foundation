@@ -24,7 +24,7 @@ class Templater extends Facade
      *
      * @return string
      */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return 'opx.templater';
     }

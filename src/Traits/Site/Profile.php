@@ -9,7 +9,7 @@ trait Profile
      *
      * @return  string
      */
-    public function profile()
+    public function profile(): string
     {
         if ($this->profile) {
             return $this->profile;

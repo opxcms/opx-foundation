@@ -30,13 +30,15 @@ class UserFileRepository implements UserRepositoryContract
 
     /**
      * The cache used for storing connection tokens
-     * @var \Illuminate\Contracts\Cache\Factory
+     *
+     * @var CacheContract
      */
     protected $cache;
 
     /**
      * The hash driver to check password
-     * @var \Illuminate\Contracts\Hashing\Hasher
+     *
+     * @var HasherContract
      */
     protected $hasher;
 
@@ -49,7 +51,7 @@ class UserFileRepository implements UserRepositoryContract
         $this->cache = $cache;
     }
 
-    public function retrieveById($identifier)
+    public function retrieveById($identifier): ?GenericUser
     {
         if ($identifier && $this->users->has($identifier)) {
             $user = $this->createUser($this->users[$identifier]);
@@ -58,7 +60,7 @@ class UserFileRepository implements UserRepositoryContract
         return $user ?? null;
     }
 
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): ?GenericUser
     {
         unset($credentials[(new User([]))->getPasswordName()]);
 
@@ -73,18 +75,18 @@ class UserFileRepository implements UserRepositoryContract
         return $this->createUser($users->first());
     }
 
-    public function validateCredentials(UserContract $user, array $credentials, $hasher = null)
+    public function validateCredentials(UserContract $user, array $credentials, $hasher = null): bool
     {
         $plain = $credentials['password'];
 
         return ($plain === $user->getAuthPassword()) || ($this->hasher->check($plain, $user->getAuthPassword()));
     }
 
-    public function retrieveByToken($identifier, $token)
+    public function retrieveByToken($identifier, $token): ?GenericUser
     {
         $user = $this->retrieveById($identifier);
 
-        if($user === null) {
+        if ($user === null) {
             return null;
         }
 
@@ -99,7 +101,7 @@ class UserFileRepository implements UserRepositoryContract
     }
 
 
-    public function updateRememberToken(UserContract $user, $token)
+    public function updateRememberToken(UserContract $user, $token): void
     {
         $this->remember_tokens->setToken($user, $token);
     }
@@ -110,14 +112,14 @@ class UserFileRepository implements UserRepositoryContract
         $this->api_tokens->getToken($user);
     }
 
-    public function updateApiToken(UserContract $user, $value)
+    public function updateApiToken(UserContract $user, $token): void
     {
 
     }
 
-    public function createUser($credentials = [])
+    public function createUser($credentials = []): ?GenericUser
     {
-        if(! $credentials) {
+        if (!$credentials) {
             return null;
         }
 

@@ -29,7 +29,7 @@ class SiteServiceProvider extends ServiceProvider
     use Profile;
 
     /** @var  Application  The application instance. */
-    protected $app;
+    public $app;
 
     /** @var string  Name of currently running server. */
     protected $serverName;

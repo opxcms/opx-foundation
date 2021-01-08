@@ -2,18 +2,23 @@
 
 namespace Core\Http\Controllers\Api;
 
+use Core\Foundation\Module\BaseModule;
 use Core\Http\Controllers\Controller;
+use Exception;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class ManageApiRouter extends Controller
 {
     /**
      * Handle all incoming api request and dispatch it.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
-     * @return  \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return  ResponseFactory|Response
      */
     public function handleRequest(Request $request)
     {
@@ -34,18 +39,18 @@ class ManageApiRouter extends Controller
                 // else we need to find controller and run method
             } else {
 
-                $controllerName = 'Core\Http\Controllers\Api\Manage' . str_replace('_', '', title_case($segments[0])) . 'ApiController';
+                $controllerName = 'Core\Http\Controllers\Api\Manage' . str_replace('_', '', Str::title($segments[0])) . 'ApiController';
 
                 $controller = app()->make($controllerName);
 
-                $methodName = $method . str_replace('_', '', title_case($segments[1]));
+                $methodName = $method . str_replace('_', '', Str::title($segments[1]));
 
                 unset($segments[1], $segments[0]);
 
-                $result = \call_user_func([$controller, $methodName], $request, array_values($segments));
+                $result = $controller->$methodName($request, array_values($segments));
 
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $result = response()
                 ->json(['message' => $e->getMessage() . ' at line ' . $e->getLine() . ' in ' . $e->getFile()], 500);
         }
@@ -56,11 +61,11 @@ class ManageApiRouter extends Controller
     /**
      * Get all of the segments for the request API path.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return  array
      */
-    protected function segments(Request $request)
+    protected function segments(Request $request): array
     {
         $basePath = route(Route::currentRouteName(), [], false);
         $fullPath = '/' . $request->decodedPath();
@@ -69,7 +74,7 @@ class ManageApiRouter extends Controller
 
         $segments = explode('/', $path);
 
-        return array_values(array_filter($segments, function ($value) {
+        return array_values(array_filter($segments, static function ($value) {
             return $value !== '';
         }));
     }
@@ -77,23 +82,23 @@ class ManageApiRouter extends Controller
     /**
      * Forward request to module.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param array $segments
      * @param string $method
      *
      * @return  mixed
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function forwardRequest(Request $request, $segments, $method)
+    public function forwardRequest(Request $request, array $segments, string $method)
     {
-        /** @var \Core\Foundation\Module\BaseModule $module */
+        /** @var BaseModule $module */
         $module = app()->make($segments[0]);
 
-        $controllerName = 'Manage' . str_replace('_', '', title_case($segments[1])) . 'ApiController';
+        $controllerName = 'Manage' . str_replace('_', '', Str::title($segments[1])) . 'ApiController';
 
         if (isset($segments[2])) {
-            $functionName = str_replace('_', '', title_case($segments[2]));
+            $functionName = str_replace('_', '', Str::title($segments[2]));
             unset($segments[2]);
         } else {
             $functionName = 'Index';

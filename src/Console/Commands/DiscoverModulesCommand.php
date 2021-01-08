@@ -4,7 +4,6 @@ namespace Core\Console\Commands;
 
 use Core\Tools\Modules\ModulesLister;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class DiscoverModulesCommand extends Command
 {
@@ -34,7 +33,7 @@ class DiscoverModulesCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         $modules = ModulesLister::discoverModules(app());
 
@@ -45,5 +44,7 @@ class DiscoverModulesCommand extends Command
                 $this->info('Discovered: ' . $module['module']);
             }
         }
+
+        return 0;
     }
 }

@@ -24,7 +24,7 @@ class RouteRegistrar
      *
      * @return  void
      */
-    public function registerPublicRoutes($profile): void
+    public function registerPublicRoutes(string $profile): void
     {
 
     }
@@ -36,7 +36,7 @@ class RouteRegistrar
      *
      * @return  void
      */
-    public function registerPublicAPIRoutes($profile)
+    public function registerPublicAPIRoutes(string $profile): void
     {
 
     }
