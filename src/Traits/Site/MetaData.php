@@ -22,11 +22,11 @@ trait MetaData
     /**
      * Set metaTitle.
      *
-     * @param string $metaTitle
+     * @param string|null $metaTitle
      *
      * @return  $this
      */
-    public function setMetaTitle(string $metaTitle): self
+    public function setMetaTitle(?string $metaTitle): self
     {
         $this->metaTitle = $metaTitle;
 
@@ -36,11 +36,11 @@ trait MetaData
     /**
      * Set metaDescription.
      *
-     * @param string $metaDescription
+     * @param string|null $metaDescription
      *
      * @return  $this
      */
-    public function setMetaDescription(string $metaDescription): self
+    public function setMetaDescription(?string $metaDescription): self
     {
         $this->metaDescription = $metaDescription;
 
@@ -50,11 +50,11 @@ trait MetaData
     /**
      * Set metaKeywords.
      *
-     * @param string $metaKeywords
+     * @param string|null $metaKeywords
      *
      * @return  $this
      */
-    public function setMetaKeywords(string $metaKeywords): self
+    public function setMetaKeywords(?string $metaKeywords): self
     {
         $this->metaKeywords = $metaKeywords;
 

@@ -20,7 +20,7 @@ trait DataAttribute
      *
      * @return mixed
      */
-    public function getAttribute(string $key)
+    public function getAttribute($key)
     {
         if (strpos($key, '_') === 0) {
             return $this->getAttributeFromData($key);
@@ -37,7 +37,7 @@ trait DataAttribute
      *
      * @return mixed
      */
-    public function setAttribute(string $key, $value)
+    public function setAttribute($key, $value)
     {
         if (strpos($key, '_') === 0) {
             $this->setAttributeToData($key, $value);

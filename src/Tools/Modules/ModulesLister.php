@@ -97,7 +97,7 @@ class ModulesLister
             $discovered = require $discoveredFileName;
         }
 
-        foreach ($packages as $package) {
+        foreach ($packages['packages'] as $package) {
             if (isset($package['extra']['opxcms']['module'])) {
                 $class = $package['extra']['opxcms']['module'];
                 $modules[$package['name']] = [

@@ -102,13 +102,13 @@ class ManageLocalizationApiController extends Controller
      * Flatten translations array.
      *
      * @param string $key
-     * @param array $translations
+     * @param array|string $translations
      *
      * @return  array
      */
-    protected function flattenTranslations(string $key, array $translations): array
+    protected function flattenTranslations(string $key, $translations): array
     {
-        if(empty($translations)) {
+        if(empty($translations) || is_string($translations)) {
             return [];
         }
 
