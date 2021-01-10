@@ -3,6 +3,7 @@
 namespace Core\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -14,9 +15,9 @@ class HTMLMinify
      * @param Request $request
      * @param Closure $next
      *
-     * @return mixed
+     * @return Response|JsonResponse|mixed
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         /** @var Response $response */
         $response = $next($request);
