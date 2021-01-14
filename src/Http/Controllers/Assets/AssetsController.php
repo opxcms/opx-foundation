@@ -7,6 +7,7 @@ use Core\Http\Controllers\Controller;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AssetsController extends Controller
 {
@@ -263,7 +264,6 @@ class AssetsController extends Controller
      * Generate unique filename based on random string.
      *
      * @param string $directory
-     * @param string $prefix
      * @param string $extension
      *
      * @return  string
@@ -271,7 +271,7 @@ class AssetsController extends Controller
     protected static function makeUniqueFilename(string $directory, string $extension = ''): string
     {
         do {
-            $filename = str_random(16) . ($extension ? '.' . $extension : '');
+            $filename = Str::random()(16) . ($extension ? '.' . $extension : '');
         } while (file_exists($directory . DIRECTORY_SEPARATOR . $filename));
 
         return $filename;

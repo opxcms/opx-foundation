@@ -3,6 +3,7 @@
 namespace Core\Foundation\Templater\Traits\Mutators\Helpers;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 
 trait StoreFile
 {
@@ -18,7 +19,7 @@ trait StoreFile
     protected static function makeUniqueFilename(string $directory, string $prefix = '', string $extension = ''): string
     {
         do {
-            $filename = $prefix . strtolower(str_random()) . ($extension ? '.' . $extension : '');
+            $filename = $prefix . strtolower(Str::random()) . ($extension ? '.' . $extension : '');
         } while (file_exists($directory . DIRECTORY_SEPARATOR . $filename));
 
         return $filename;
