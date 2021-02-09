@@ -15,7 +15,7 @@ Route::name('manage_login')
     ->get('manage/login', 'Manage\ManageLoginController@showLoginForm')
     ->middleware(['manage', 'manage.not.authenticated']);
 
-Route::name('manage_login')
+Route::name('manage_login_post')
     ->post('manage/login', 'Manage\ManageLoginController@login')
     ->middleware(['manage', 'manage.not.authenticated']);
 

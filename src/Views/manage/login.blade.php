@@ -11,7 +11,7 @@
         {!! \Core\Facades\Site::localeSelectorHtml() !!}
     </div>
 
-    <form class="form rise-6dp" method="POST" action="{{ route('manage_login') }}">
+    <form class="form rise-6dp" method="POST" action="{{ route('manage_login_post') }}">
         <div class="form__title">{{ __('manage.login_title') }}</div>
         <div class="form__subtitle"></div>
         @csrf
