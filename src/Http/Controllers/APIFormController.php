@@ -23,7 +23,7 @@ class APIFormController extends BaseController
     /**
      * Returns list component with associated settings.
      *
-     * @param int|null $id
+     * @param int|mixed|null $id
      * @param Templater $template
      * @param string $caption
      * @param string|null $save
@@ -32,7 +32,7 @@ class APIFormController extends BaseController
      *
      * @return  JsonResponse
      */
-    public function responseFormComponent(?int $id, Templater $template, string $caption, $save = null, $redirect = null, $hints = false): JsonResponse
+    public function responseFormComponent($id, Templater $template, string $caption, $save = null, $redirect = null, $hints = false): JsonResponse
     {
         $data = $template->get();
 
